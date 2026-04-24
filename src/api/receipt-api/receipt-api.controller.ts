@@ -55,12 +55,4 @@ export class ReceiptApiController {
       .delete(id)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
-
-  @UseGuards(AuthGuard)
-  @Get('receiptNo')
-  getReceiptNo() {
-    return this.receiptService
-      .getReceiptNo()
-      .catch((e) => ({ error: 'Unexpected Error' }));
-  }
 }

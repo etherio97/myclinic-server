@@ -14,6 +14,7 @@ import { ReceiptApiModule } from './api/receipt-api/receipt-api.module';
 import { SharedModule } from './shared/shared.module';
 import { AppointmentModule } from './orm/appointment/appointment.module';
 import { AppointmentApiModule } from './api/appointment-api/appointment-api.module';
+import { DashboardModule } from './api/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -34,10 +35,11 @@ import { AppointmentApiModule } from './api/appointment-api/appointment-api.modu
     ItemModule,
     PatientModule,
     ReceiptModule,
-    AuthModule,
     AppointmentModule,
 
     /* API Modules */
+    AuthModule,
+    DashboardModule,
     DoctorApiModule,
     ItemApiModule,
     PatientApiModule,

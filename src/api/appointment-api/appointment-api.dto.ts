@@ -9,6 +9,7 @@ export class CreateAppointmentDto {
   doctor: Doctor;
   referDoctor: Doctor;
   appointmentDate: string;
+  status: string;
 }
 
 export class UpdateAppointmentDto {
@@ -19,4 +20,5 @@ export class UpdateAppointmentDto {
   doctor: Doctor;
   referDoctor: Doctor;
   appointmentDate: string;
+  status: string;
 }

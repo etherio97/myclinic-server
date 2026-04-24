@@ -15,13 +15,16 @@ export class AppointmentApiService {
     private appointmentRepo: Repository<Appointment>,
   ) {}
 
-  async list(startDate?: string, endDate?: string) {
+  async list(startDate?: string, endDate?: string, appointmentStatus?: string) {
     const condition: any = {};
     if (startDate && endDate) {
       condition.appointmentDate = Between(
         moment(startDate).format('yyyy-MM-DDT00:00:00.000Z'),
         moment(endDate).format('yyyy-MM-DDT23:59:59.999Z'),
       );
+    }
+    if (appointmentStatus) {
+      condition.status = appointmentStatus;
     }
     return this.appointmentRepo.find({
       relations: ['patient', 'doctor', 'referDoctor'],
@@ -59,10 +62,8 @@ export class AppointmentApiService {
     return this.appointmentRepo.save(appointment);
   }
 
-  async update(id: string, dto: UpdateAppointmentDto) {
-    this.appointmentRepo.update(id, dto);
-
-    return { message: 'Appointment updated successfully' };
+  update(id: string, dto: UpdateAppointmentDto) {
+    return this.appointmentRepo.update(id, dto);
   }
 
   async delete(id: string) {

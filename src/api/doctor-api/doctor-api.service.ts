@@ -11,26 +11,34 @@ export class DoctorApiService {
     private doctorRepo: Repository<Doctor>,
   ) {}
 
-  async list(fullName?: string, doctorNo?: string) {
-    const conditions: any = {};
+  async list(fullName?: string, doctorNo?: number, listAll?: string) {
+    if (doctorNo) {
+      return this.doctorRepo.find({ where: { doctorNo: doctorNo } });
+    }
 
     if (fullName) {
+      let query = ' AND is_active TRUE';
+      if (listAll) {
+        query = '';
+      }
       return this.doctorRepo
         .createQueryBuilder('doctor')
-        .where('LOWER(doctor.fullName) LIKE LOWER(:fullName)', {
+        .where('LOWER(doctor.fullName) LIKE LOWER(:fullName)' + query, {
           fullName: `%${fullName}%`,
         })
         .orderBy({ created_at: 'DESC' })
         .getMany();
     }
 
-    if (doctorNo) {
-      conditions.doctorNo = doctorNo;
-      return this.doctorRepo.find({ where: conditions });
+    const conditions: any = {};
+
+    if (!listAll) {
+      conditions.isActive = true;
     }
 
     return this.doctorRepo.find({
       order: { createdAt: 'DESC' },
+      where: conditions,
     });
   }
 

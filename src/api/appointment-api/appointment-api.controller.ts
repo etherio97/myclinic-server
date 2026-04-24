@@ -19,11 +19,16 @@ import { AuthGuard } from 'src/guards/auth.guard';
 export class AppointmentApiController {
   constructor(private appointmentService: AppointmentApiService) {}
 
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   @Get('list')
-  list(@Query('startDate') startDate, @Query('endDate') endDate) {
-    return this.appointmentService.list(startDate, endDate);
-    // .catch((e) => ({ error: 'Unexpected Error' }));
+  list(
+    @Query('startDate') startDate,
+    @Query('endDate') endDate,
+    @Query('status') appointmentStatus,
+  ) {
+    return this.appointmentService
+      .list(startDate, endDate, appointmentStatus)
+      .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
   @UseGuards(AuthGuard)

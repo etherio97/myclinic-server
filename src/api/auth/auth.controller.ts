@@ -39,14 +39,6 @@ export class AuthController {
   getAllUsers() {
     return this.authService
       .getAll()
-      .then((res) => {
-        let response = [];
-        res.forEach((r) => {
-          delete r.password;
-          response.push(r);
-        });
-        return response;
-      })
       .catch((e) => ({ error: 'Unexcepted Error' }));
   }
 

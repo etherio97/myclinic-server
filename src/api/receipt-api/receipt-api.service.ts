@@ -20,28 +20,11 @@ export class ReceiptApiService {
         moment(endDate).format('yyyy-MM-DDT23:59:59.999Z'),
       );
     }
-    return this.receiptRepo
-      .find({
-        relations: ['patient', 'doctor', 'user'],
-        where: { status: 'Active', ...condition },
-        order: { createdAt: 'DESC' },
-      })
-      .then((receipts) =>
-        receipts.map((receipt) => ({
-          ...receipt,
-          user: receipt.user
-            ? {
-                id: receipt.user.id,
-                fullName: receipt.user.fullName,
-                username: receipt.user.username,
-                role: receipt.user.role,
-                isActive: receipt.user.isActive,
-                createdAt: receipt.user.createdAt,
-                updatedAt: receipt.user.updatedAt,
-              }
-            : null,
-        })),
-      );
+    return this.receiptRepo.find({
+      relations: ['patient', 'doctor', 'user'],
+      where: { status: 'Active', ...condition },
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async findOne(id: string) {
@@ -80,11 +63,5 @@ export class ReceiptApiService {
     await this.receiptRepo.update(id, { status: 'Deleted' });
 
     return { message: 'Receipt deleted successfully' };
-  }
-
-  async getReceiptNo() {
-    return this.receiptRepo.query(
-      `SELECT nextval('receipt_no_seq') as receiptNo`,
-    );
   }
 }

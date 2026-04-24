@@ -28,7 +28,6 @@ export class Doctor {
     name: 'license_no',
     type: 'varchar',
     length: 100,
-    unique: true,
     nullable: true,
   })
   licenseNo: string;

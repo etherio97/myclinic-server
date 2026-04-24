@@ -35,6 +35,9 @@ export class Appointment {
   @Column({ name: 'appointment_case', type: 'varchar', length: 64 })
   appointmentCase: string;
 
+  @Column({ type: 'varchar', length: 32, default: 'Booked' })
+  status: string;
+
   @ManyToOne(() => Doctor)
   @JoinColumn({ name: 'doctor_id' })
   doctor: Doctor;

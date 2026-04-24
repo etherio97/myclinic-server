@@ -46,6 +46,15 @@ export class AuthService {
   async login(dto: LoginAuthDto) {
     const user = await this.userRepo.findOne({
       where: { username: dto.username, isActive: true },
+      select: [
+        'id',
+        'fullName',
+        'username',
+        'password',
+        'role',
+        'updatedAt',
+        'createdAt',
+      ],
     });
 
     if (!user) throw new UnauthorizedException('Invalid credentials');
@@ -80,6 +89,15 @@ export class AuthService {
   async changePassword(id: string, oldPassword: string, newPassword: string) {
     const user = await this.userRepo.findOne({
       where: { id },
+      select: [
+        'id',
+        'fullName',
+        'username',
+        'password',
+        'role',
+        'updatedAt',
+        'createdAt',
+      ],
     });
 
     if (!user) throw new UnauthorizedException('User not found');
