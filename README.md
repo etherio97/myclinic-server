@@ -27,6 +27,8 @@ sudo systemctl start postgresql
 
 sudo systemctl status postgresql # To check status
 
+createdb -U postgres postgres # Create Database
+
 # Install NodeJS
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 
