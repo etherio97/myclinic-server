@@ -81,8 +81,8 @@ export class DashboardController {
     return Promise.all([
       this.dashboardService.getTotalRevenue(startDate, endDate),
       this.dashboardService.getTotalDiscount(startDate, endDate),
-      this.dashboardService.getAverageRevenuePerDay(startDate, endDate),
-      this.dashboardService.getAverageRevenuePerPatient(startDate, endDate),
+      this.dashboardService.getTotalClinicRevenue(startDate, endDate),
+      this.dashboardService.getTotalLabRevenue(startDate, endDate),
       this.dashboardService.getTotalPatients(startDate, endDate),
       this.dashboardService.getTotalAppointments(startDate, endDate),
     ])

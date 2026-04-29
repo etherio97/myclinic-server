@@ -16,18 +16,12 @@ export class Item {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column({ type: 'text', nullable: true })
-  description: string;
-
-  // Medicine | Service | Procedure
   @Column({ name: 'item_type', type: 'varchar', length: 50 })
   itemType: string;
 
-  // Antibiotics | Laboratory | General
   @Column({ type: 'varchar', length: 100, nullable: true })
   category: string;
 
-  // Cost to clinic
   @Column({
     name: 'base_price',
     type: 'decimal',
@@ -37,7 +31,6 @@ export class Item {
   })
   basePrice: number;
 
-  // Selling price to patient
   @Column({
     name: 'selling_price',
     type: 'decimal',

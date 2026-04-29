@@ -12,13 +12,16 @@ export class ReceiptApiService {
     private receiptRepo: Repository<Receipt>,
   ) {}
 
-  async list(startDate?: string, endDate?: string) {
+  async list(startDate?: string, endDate?: string, type?: string) {
     const condition: any = {};
     if (startDate && endDate) {
       condition.date = Between(
         moment(startDate).format('yyyy-MM-DDT00:00:00.000Z'),
         moment(endDate).format('yyyy-MM-DDT23:59:59.999Z'),
       );
+    }
+    if (type) {
+      condition.type = type;
     }
     return this.receiptRepo.find({
       relations: ['patient', 'doctor', 'user'],
@@ -42,18 +45,13 @@ export class ReceiptApiService {
     });
   }
 
-  async create(dto: CreateReceiptDto) {
+  async create(dto: any) {
     const receipt = this.receiptRepo.create(dto);
 
-    const savedReceipt = await this.receiptRepo.save(receipt, {});
-
-    return this.receiptRepo.findOne({
-      where: { id: savedReceipt.id },
-      relations: ['patient', 'doctor', 'user'],
-    });
+    return this.receiptRepo.save(receipt);
   }
 
-  async update(id: string, dto: UpdateReceiptDto) {
+  async update(id: string, dto: any) {
     await this.receiptRepo.update(id, dto);
 
     return { message: 'Receipt updated successfully' };

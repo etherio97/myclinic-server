@@ -18,9 +18,13 @@ export class ReceiptApiController {
 
   @UseGuards(AuthGuard)
   @Get('list')
-  list(@Query('startDate') startDate, @Query('endDate') endDate) {
+  list(
+    @Query('startDate') startDate,
+    @Query('endDate') endDate,
+    @Query('type') type,
+  ) {
     return this.receiptService
-      .list(startDate, endDate)
+      .list(startDate, endDate, type)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
@@ -44,8 +48,8 @@ export class ReceiptApiController {
     dto.user = res.req.user.sub;
     return this.receiptService
       .create(dto)
-      .then((response) => res.json(response))
-      .catch((e) => ({ error: 'Unexpected Error' }));
+      .then((data) => res.json(data))
+      .catch((e) => res.status(500).json({ error: 'Unexpected Error' }));
   }
 
   @UseGuards(AuthGuard)

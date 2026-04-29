@@ -27,8 +27,14 @@ export class Patient {
   @Column({ type: 'enum', enum: ['Male', 'Female', 'Other'] })
   gender: string;
 
-  @Column({ name: 'blood_type', type: 'varchar', length: 5, nullable: true })
-  bloodType: string;
+  @Column({ name: 'ssb_number', type: 'varchar', length: 32, nullable: true })
+  ssbNumber: string;
+
+  @Column({ name: 'nrc_number', type: 'varchar', length: 32, nullable: true })
+  nrcNumber: string;
+
+  @Column({ type: 'text', nullable: true })
+  notes: string;
 
   @Column({
     name: 'phone_number',

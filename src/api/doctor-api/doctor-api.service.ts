@@ -11,7 +11,7 @@ export class DoctorApiService {
     private doctorRepo: Repository<Doctor>,
   ) {}
 
-  async list(fullName?: string, doctorNo?: number, listAll?: string) {
+  list(fullName?: string, doctorNo?: number, listAll?: string) {
     if (doctorNo) {
       return this.doctorRepo.find({ where: { doctorNo: doctorNo } });
     }
@@ -42,27 +42,21 @@ export class DoctorApiService {
     });
   }
 
-  async findOne(id: string) {
+  findOne(id: string) {
     return this.doctorRepo.findOneBy({ id });
   }
 
-  async create(dto: CreateDoctorDto) {
+  create(dto: CreateDoctorDto) {
     const doctor = this.doctorRepo.create(dto);
 
-    const doctorResponse = await this.doctorRepo.save(doctor);
-
-    return doctorResponse;
+    return this.doctorRepo.save(doctor);
   }
 
-  async update(id: string, dto: UpdateDoctorDto) {
-    this.doctorRepo.update(id, dto);
-
-    return { message: 'Doctor updated successfully' };
+  update(id: string, dto: UpdateDoctorDto) {
+    return this.doctorRepo.update(id, dto);
   }
 
-  async delete(id: string) {
-    this.doctorRepo.delete(id);
-
-    return { message: 'Doctor deleted successfully' };
+  delete(id: string) {
+    return this.doctorRepo.delete(id);
   }
 }

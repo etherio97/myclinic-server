@@ -4,23 +4,25 @@ import { Patient } from 'src/orm/patient/patient.entity';
 import { User } from 'src/orm/user/user.entity';
 
 export class CreateReceiptDto {
+  type: 'Laboratory' | 'Clinic';
   patient: Patient;
   doctor: Doctor;
   user: User;
-  paymentMethod: string;
-  subtotal: string;
-  discountAmount: string;
-  grandTotal: string;
+  paymentMethod: number;
+  subtotal: number;
+  discountAmount: number;
+  grandTotal: number;
   items: Item[];
 }
 
 export class UpdateReceiptDto {
+  type: 'Laboratory' | 'Clinic';
   patient?: Patient;
   doctor?: Doctor;
   user?: User;
-  paymentMethod?: string;
-  subtotal?: string;
-  discountAmount?: string;
-  grandTotal?: string;
+  paymentMethod?: number;
+  subtotal?: number;
+  discountAmount?: number;
+  grandTotal?: number;
   items?: Item[];
 }

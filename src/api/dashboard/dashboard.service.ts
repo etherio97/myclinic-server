@@ -67,6 +67,36 @@ export class DashboardService {
       .then((res) => res[0]);
   }
 
+  async getTotalClinicRevenue(startDate: string, endDate: string) {
+    startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
+    endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
+
+    return this.repo
+      .query(
+        `SELECT COALESCE(SUM(grand_total), 0) AS total_clinic_revenue
+        FROM receipts WHERE date BETWEEN $1 AND $2 
+        AND type = 'Clinic'
+        AND status = 'Active'`,
+        [startDate, endDate],
+      )
+      .then((res) => res[0]);
+  }
+
+  async getTotalLabRevenue(startDate: string, endDate: string) {
+    startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
+    endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
+
+    return this.repo
+      .query(
+        `SELECT COALESCE(SUM(grand_total), 0) AS total_lab_revenue
+        FROM receipts WHERE date BETWEEN $1 AND $2 
+        AND type = 'Laboratory'
+        AND status = 'Active'`,
+        [startDate, endDate],
+      )
+      .then((res) => res[0]);
+  }
+
   async getTotalPatients(startDate: string, endDate: string) {
     startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
     endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');

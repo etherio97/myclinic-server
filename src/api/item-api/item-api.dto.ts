@@ -1,6 +1,5 @@
 export class CreateItemDto {
   name: string;
-  description: string;
   itemType: string;
   category: string;
   basePrice: number;
@@ -9,7 +8,6 @@ export class CreateItemDto {
 
 export class UpdateItemDto {
   name?: string;
-  description?: string;
   itemType?: string;
   category?: string;
   basePrice?: number;

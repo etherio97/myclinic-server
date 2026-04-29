@@ -82,6 +82,10 @@ export class AuthService {
     return this.userRepo.delete(id);
   }
 
+  async changeRole(id: string, role: string) {
+    return this.userRepo.update(id, { role });
+  }
+
   async changeStatus(id: string, isActive: boolean) {
     return this.userRepo.update(id, { isActive });
   }
@@ -104,8 +108,7 @@ export class AuthService {
 
     const isMatch = await bcrypt.compare(oldPassword, user.password);
 
-    if (!isMatch)
-      throw new UnauthorizedException('Old password does not match');
+    if (!isMatch) throw new UnauthorizedException('Invalid old password.');
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 

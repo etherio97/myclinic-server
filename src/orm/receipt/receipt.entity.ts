@@ -32,6 +32,12 @@ export class Receipt {
   doctor: Doctor;
 
   @Column({
+    type: 'enum',
+    enum: ['Clinic', 'Laboratory'],
+  })
+  type: string;
+
+  @Column({
     name: 'receipt_no',
     type: 'int',
     default: () => "nextval('receipt_no_seq')",
@@ -53,7 +59,7 @@ export class Receipt {
     scale: 2,
     default: 0,
   })
-  subtotal: string;
+  subtotal: number;
 
   @Column({
     name: 'discount_amount',
@@ -62,7 +68,7 @@ export class Receipt {
     scale: 2,
     default: 0,
   })
-  discountAmount: string;
+  discountAmount: number;
 
   @Column({
     name: 'grand_total',
@@ -71,7 +77,7 @@ export class Receipt {
     scale: 2,
     default: 0,
   })
-  grandTotal: string;
+  grandTotal: number;
 
   @Column({
     type: 'jsonb',

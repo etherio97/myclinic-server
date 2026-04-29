@@ -37,10 +37,9 @@ export class PatientApiController {
   @UseGuards(AuthGuard)
   @Post('create')
   create(@Body() dto: CreatePatientDto) {
-    return this.patientService.create(dto).catch((e) => {
-      console.error(e);
-      return { error: 'Unexpected Error' };
-    });
+    return this.patientService
+      .create(dto)
+      .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
   @UseGuards(AuthGuard)

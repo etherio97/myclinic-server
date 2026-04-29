@@ -25,20 +25,24 @@ export class Doctor {
   specialization: string;
 
   @Column({
-    name: 'license_no',
     type: 'varchar',
-    length: 100,
+    length: 255,
     nullable: true,
   })
-  licenseNo: string;
+  address: string;
 
   @Column({
     name: 'phone_number',
     type: 'varchar',
     length: 20,
-    nullable: true,
   })
   phoneNumber: string;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  remarks: string;
 
   @Column({
     name: 'is_active',

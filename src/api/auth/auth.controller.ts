@@ -17,51 +17,11 @@ import { RolesGuard } from 'src/guards/roles.guard';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
-  @Post('register')
-  register(@Body() dto: RegisterAuthDto) {
-    return this.authService
-      .register(dto)
-      .catch((e) => ({ error: 'Unexcepted Error' }));
-  }
-
   @Post('login')
   login(@Body() dto: LoginAuthDto) {
     return this.authService
       .login(dto)
-      .catch((e) => ({ error: 'Unexcepted Error' }));
-  }
-
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
-  @Get('users')
-  getAllUsers() {
-    return this.authService
-      .getAll()
-      .catch((e) => ({ error: 'Unexcepted Error' }));
-  }
-
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
-  @Post('delete/:id')
-  delete(@Param('id') id: string) {
-    return this.authService
-      .delete(id)
-      .catch((e) => ({ error: 'Unexcepted Error' }));
-  }
-
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
-  @Post('change-status/:id')
-  changeStatus(@Param('id') id: string, @Body('isActive') isActive: any) {
-    let _isActive = false;
-    if (isActive === 'true' || isActive === 1 || isActive === true) {
-      _isActive = true;
-    }
-    return this.authService
-      .changeStatus(id, _isActive)
-      .catch((e) => ({ error: 'Unexcepted Error' }));
+      .catch((e) => ({ error: 'Unexcepted Error', message: e.message }));
   }
 
   @UseGuards(AuthGuard)
@@ -79,5 +39,54 @@ export class AuthController {
       .catch((e) => {
         res.json({ error: true, message: e.message });
       });
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
+  @Post('register')
+  register(@Body() dto: RegisterAuthDto) {
+    return this.authService
+      .register(dto)
+      .catch((e) => ({ error: 'Unexcepted Error', message: e.message }));
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
+  @Get('users')
+  getAllUsers() {
+    return this.authService
+      .getAll()
+      .catch((e) => ({ error: 'Unexcepted Error', message: e.message }));
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
+  @Post('delete/:id')
+  delete(@Param('id') id: string) {
+    return this.authService
+      .delete(id)
+      .catch((e) => ({ error: 'Unexcepted Error', message: e.message }));
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
+  @Post('change-status/:id')
+  changeStatus(@Param('id') id: string, @Body('isActive') isActive: any) {
+    let _isActive = false;
+    if (isActive === 'true' || isActive === 1 || isActive === true) {
+      _isActive = true;
+    }
+    return this.authService
+      .changeStatus(id, _isActive)
+      .catch((e) => ({ error: 'Unexcepted Error', message: e.message }));
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
+  @Post('change-role/:id')
+  changeRole(@Param('id') id: string, @Body('role') role: any) {
+    return this.authService
+      .changeStatus(id, role)
+      .catch((e) => ({ error: 'Unexcepted Error', message: e.message }));
   }
 }

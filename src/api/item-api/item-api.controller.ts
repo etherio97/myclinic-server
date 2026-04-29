@@ -65,16 +65,11 @@ export class ItemApiController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('utils')
-  utils() {
+  @Get('categories')
+  utils(@Query('type') type: string) {
     return this.itemService
-      .getCategories()
-      .then((categories) => {
-        return this.itemService.getItemTypes().then((itemTypes) => ({
-          categories: Object.values(categories.map((i) => i.category)),
-          itemTypes: Object.values(itemTypes.map((i) => i.item_type)),
-        }));
-      })
+      .getCategories(type)
+      .then((items) => items.map(({ category }) => category))
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 }

@@ -11,7 +11,7 @@ export class ItemApiService {
     private itemRepo: Repository<Item>,
   ) {}
 
-  async list({
+  list({
     name,
     itemType,
     category,
@@ -32,10 +32,12 @@ export class ItemApiService {
       qb.andWhere('item.category = :category', { category });
     }
 
+    qb.orderBy('created_at', 'DESC');
+
     return qb.getMany();
   }
 
-  async findOne(id: string) {
+  findOne(id: string) {
     return this.itemRepo.findOneBy({ id });
   }
 
@@ -48,22 +50,25 @@ export class ItemApiService {
   }
 
   async update(id: string, dto: UpdateItemDto) {
-    this.itemRepo.update(id, dto);
+    await this.itemRepo.update(id, dto);
 
     return { message: 'Item updated successfully' };
   }
 
   async delete(id: string) {
-    this.itemRepo.delete(id);
+    await this.itemRepo.delete(id);
 
     return { message: 'Item deleted successfully' };
   }
 
-  async getCategories() {
-    return this.itemRepo.query('SELECT DISTINCT category FROM items');
-  }
-
-  async getItemTypes() {
-    return this.itemRepo.query('SELECT DISTINCT item_type FROM items');
+  getCategories(type?: string) {
+    const qb = this.itemRepo
+      .createQueryBuilder('item')
+      .distinctOn(['item.category'])
+      .select('item.category');
+    if (type) {
+      qb.where({ itemType: type });
+    }
+    return qb.getMany();
   }
 }
