@@ -17,7 +17,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 export class ItemApiController {
   constructor(private itemService: ItemApiService) {}
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @Get('list')
   list(
     @Query('name') name: string,

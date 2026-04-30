@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { UserModule } from './orm/user/user.module';
 import { DoctorModule } from './orm/doctor/doctor.module';
 import { ItemModule } from './orm/item/item.module';
@@ -14,9 +15,13 @@ import { SharedModule } from './shared/shared.module';
 import { AppointmentModule } from './orm/appointment/appointment.module';
 import { AppointmentApiModule } from './api/appointment-api/appointment-api.module';
 import { DashboardModule } from './api/dashboard/dashboard.module';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot({
+      throttlers: [{ ttl: 60000, limit: 100 }],
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST || 'localhost',
@@ -46,6 +51,12 @@ import { DashboardModule } from './api/dashboard/dashboard.module';
 
     /* Other Modules */
     SharedModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}
