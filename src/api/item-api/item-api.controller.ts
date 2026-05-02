@@ -17,7 +17,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 export class ItemApiController {
   constructor(private itemService: ItemApiService) {}
 
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   @Get('list')
   list(
     @Query('name') name: string,
@@ -39,7 +39,6 @@ export class ItemApiController {
 
   @UseGuards(AuthGuard, RolesGuard)
   @Post('create')
-  @Roles('admin')
   create(@Body() dto: CreateItemDto) {
     return this.itemService
       .create(dto)
@@ -47,7 +46,6 @@ export class ItemApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
   @Post('update/:id')
   update(@Param('id') id: string, @Body() dto: UpdateItemDto) {
     return this.itemService
@@ -56,7 +54,7 @@ export class ItemApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('admin', 'manager')
   @Post('delete/:id')
   delete(@Param('id') id: string) {
     return this.itemService
