@@ -16,6 +16,8 @@ import { AppointmentModule } from './orm/appointment/appointment.module';
 import { AppointmentApiModule } from './api/appointment-api/appointment-api.module';
 import { DashboardModule } from './api/dashboard/dashboard.module';
 import { APP_GUARD } from '@nestjs/core';
+import { CashflowModule } from './orm/cashflow/cashflow.module';
+import { CashflowApiModule } from './api/cashflow-api/cashflow-api.module';
 
 @Module({
   imports: [
@@ -39,6 +41,7 @@ import { APP_GUARD } from '@nestjs/core';
     PatientModule,
     ReceiptModule,
     AppointmentModule,
+    CashflowModule,
 
     /* API Modules */
     AuthModule,
@@ -48,6 +51,7 @@ import { APP_GUARD } from '@nestjs/core';
     PatientApiModule,
     ReceiptApiModule,
     AppointmentApiModule,
+    CashflowApiModule,
 
     /* Other Modules */
     SharedModule,

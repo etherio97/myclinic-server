@@ -8,6 +8,7 @@ export class CreateReceiptDto {
   patient: Patient;
   doctor: Doctor;
   user: User;
+  date: string;
   paymentMethod: number;
   subtotal: number;
   discountAmount: number;
@@ -20,6 +21,7 @@ export class UpdateReceiptDto {
   patient?: Patient;
   doctor?: Doctor;
   user?: User;
+  date?: string;
   paymentMethod?: number;
   subtotal?: number;
   discountAmount?: number;
