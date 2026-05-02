@@ -104,7 +104,7 @@ export class AuthController {
   @Post('change-role/:id')
   changeRole(@Param('id') id: string, @Body('role') role: any) {
     return this.authService
-      .changeStatus(id, role)
+      .changeRole(id, role)
       .catch((e) => ({ error: 'Unexcepted Error', message: e.message }));
   }
 }
