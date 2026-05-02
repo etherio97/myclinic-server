@@ -74,8 +74,12 @@ export class AuthService {
     return { access_token: token };
   }
 
-  async getAll() {
-    return this.userRepo.find();
+  async getAll(role?: string) {
+    const condition: any = {};
+    if (role) {
+      condition.role = role;
+    }
+    return this.userRepo.find({ where: condition });
   }
 
   async delete(id: string) {

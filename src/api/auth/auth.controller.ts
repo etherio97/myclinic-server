@@ -12,6 +12,7 @@ import { LoginAuthDto, RegisterAuthDto } from './auth.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { RolesGuard } from 'src/guards/roles.guard';
+import { In } from 'typeorm';
 
 @Controller('auth')
 export class AuthController {
@@ -61,12 +62,19 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('admin', 'manager')
   @Get('users')
-  getAllUsers() {
+  getAllUsers(@Res() res) {
+    let role: any;
+    if (res.req.user.role === 'manager') {
+      role = In(['cashier']);
+    }
     return this.authService
-      .getAll()
-      .catch((e) => ({ error: 'Unexcepted Error', message: e.message }));
+      .getAll(role)
+      .then((r) => res.json(r))
+      .catch((e) =>
+        res.json({ error: 'Unexcepted Error', message: e.message }),
+      );
   }
 
   @UseGuards(AuthGuard, RolesGuard)
