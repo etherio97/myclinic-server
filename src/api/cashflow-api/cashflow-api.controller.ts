@@ -13,6 +13,7 @@ import { CreateCashflowDto, UpdateCashflowDto } from './cashflow-api.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { RolesGuard } from 'src/guards/roles.guard';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Controller('cashflow')
 export class CashflowApiController {
@@ -31,6 +32,7 @@ export class CashflowApiController {
   }
 
   @Post('create')
+  @SkipThrottle()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'manager')
   create(@Body() dto: CreateCashflowDto, @Res() res) {
