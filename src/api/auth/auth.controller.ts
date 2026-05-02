@@ -42,12 +42,22 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('admin', 'manager')
   @Post('register')
-  register(@Body() dto: RegisterAuthDto) {
+  register(@Body() dto: RegisterAuthDto, @Res() res) {
+    if (!['admin'].includes(res.req.user.role)) {
+      if (res.req.user.role === 'manager' && dto.role !== 'cashier') {
+        return res
+          .status(400)
+          .json({ error: 'Unexcepted Error', message: 'Role not allowed' });
+      }
+    }
     return this.authService
       .register(dto)
-      .catch((e) => ({ error: 'Unexcepted Error', message: e.message }));
+      .then((r) => res.json(r))
+      .catch((e) =>
+        res.json({ error: 'Unexcepted Error', message: e.message }),
+      );
   }
 
   @UseGuards(AuthGuard, RolesGuard)
@@ -60,7 +70,7 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('admin', 'manager')
   @Post('delete/:id')
   delete(@Param('id') id: string) {
     return this.authService
@@ -69,7 +79,7 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('admin', 'manager')
   @Post('change-status/:id')
   changeStatus(@Param('id') id: string, @Body('isActive') isActive: any) {
     let _isActive = false;
