@@ -67,7 +67,7 @@ export class AuthController {
   getAllUsers(@Res() res) {
     let role: any;
     if (res.req.user.role === 'manager') {
-      role = In(['cashier']);
+      role = In(['manager', 'cashier']);
     }
     return this.authService
       .getAll(role)
