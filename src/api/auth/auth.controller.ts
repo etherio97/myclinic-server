@@ -54,7 +54,7 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('admin', 'manager')
   @Post('reset-password')
   resetPassword(
     @Body('userId') userId: string,
