@@ -6,6 +6,7 @@ import { User } from '../../orm/user/user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginAuthDto, RegisterAuthDto } from './auth.dto';
+import moment from 'moment';
 
 @Injectable()
 export class AuthService {
@@ -42,6 +43,42 @@ export class AuthService {
     return { message: 'User registered successfully' };
   }
 
+  async newPassword(
+    username: string,
+    oldPassword: string,
+    newPassword: string,
+  ) {
+    const user = await this.userRepo.findOne({
+      where: { username, isActive: true },
+      select: ['id', 'fullName', 'username', 'password', 'isDefaultPassword'],
+    });
+
+    if (!user.isDefaultPassword)
+      throw new UnauthorizedException('Please login and change your password.');
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isMatch) throw new UnauthorizedException('Invalid credentials');
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await this.userRepo.update(user.id, {
+      password: hashedPassword,
+      isDefaultPassword: false,
+    });
+
+    return { message: 'Default password has been changed.' };
+  }
+
+  async resetPassword(userId: string, newPassword: string) {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    return await this.userRepo.update(userId, {
+      password: hashedPassword,
+      isDefaultPassword: true,
+    });
+  }
+
   // LOGIN
   async login(dto: LoginAuthDto) {
     const user = await this.userRepo.findOne({
@@ -52,8 +89,7 @@ export class AuthService {
         'username',
         'password',
         'role',
-        'updatedAt',
-        'createdAt',
+        'isDefaultPassword',
       ],
     });
 
@@ -62,6 +98,14 @@ export class AuthService {
     const isMatch = await bcrypt.compare(dto.password, user.password);
 
     if (!isMatch) throw new UnauthorizedException('Invalid credentials');
+
+    if (user.isDefaultPassword) {
+      return { isDefaultPassword: true };
+    }
+
+    await this.userRepo.update(user.id, {
+      lastLoggedIn: moment().toISOString(),
+    });
 
     const token = this.jwtService.sign({
       id: user.id,

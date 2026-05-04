@@ -25,6 +25,17 @@ export class AuthController {
       .catch((e) => ({ error: 'Unexcepted Error', message: e.message }));
   }
 
+  @Post('new-password')
+  newPassword(
+    @Body('username') username: string,
+    @Body('oldPassword') oldPassword: string,
+    @Body('newPassword') newPassword: string,
+  ) {
+    return this.authService
+      .newPassword(username, oldPassword, newPassword)
+      .catch((e) => ({ error: true, message: e.message }));
+  }
+
   @UseGuards(AuthGuard)
   @Post('change-password')
   changePassword(
@@ -40,6 +51,18 @@ export class AuthController {
       .catch((e) => {
         res.json({ error: true, message: e.message });
       });
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
+  @Post('reset-password')
+  resetPassword(
+    @Body('userId') userId: string,
+    @Body('newPassword') newPassword: string,
+  ) {
+    return this.authService
+      .resetPassword(userId, newPassword)
+      .catch((e) => ({ error: true, message: e.message }));
   }
 
   @UseGuards(AuthGuard, RolesGuard)

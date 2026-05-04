@@ -34,6 +34,20 @@ export class User {
   })
   isActive: boolean;
 
+  @Column({
+    name: 'is_default_password',
+    type: 'boolean',
+    default: true,
+  })
+  isDefaultPassword: boolean;
+
+  @Column({
+    name: 'last_logged_in',
+    type: 'timestamptz',
+    nullable: true,
+  })
+  lastLoggedIn: Date;
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',
