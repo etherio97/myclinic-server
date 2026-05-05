@@ -21,7 +21,7 @@ export class CashflowApiController {
 
   @Get('list')
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager')
+  @Roles('admin')
   list(
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
@@ -34,7 +34,7 @@ export class CashflowApiController {
   @Post('create')
   @SkipThrottle()
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager')
+  @Roles('admin')
   create(@Body() dto: CreateCashflowDto, @Res() res) {
     dto.user = res.req.user.id;
     return this.cashflowService
@@ -45,7 +45,7 @@ export class CashflowApiController {
 
   @Post('update/:id')
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager')
+  @Roles('admin')
   update(@Param('id') id: string, @Body() dto: UpdateCashflowDto) {
     return this.cashflowService
       .update(id, dto)
@@ -54,7 +54,7 @@ export class CashflowApiController {
 
   @Post('delete/:id')
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager')
+  @Roles('admin')
   delete(@Param('id') id: string) {
     return this.cashflowService
       .delete(id)
