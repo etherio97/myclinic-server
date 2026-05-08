@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { LoggingModule } from './logging/logging.module';
 import { UserModule } from './orm/user/user.module';
 import { DoctorModule } from './orm/doctor/doctor.module';
 import { ItemModule } from './orm/item/item.module';
@@ -15,9 +16,10 @@ import { SharedModule } from './shared/shared.module';
 import { AppointmentModule } from './orm/appointment/appointment.module';
 import { AppointmentApiModule } from './api/appointment-api/appointment-api.module';
 import { DashboardModule } from './api/dashboard/dashboard.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { CashflowModule } from './orm/cashflow/cashflow.module';
 import { CashflowApiModule } from './api/cashflow-api/cashflow-api.module';
+import { LoggingInterceptor } from './logging/logging.interceptor';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { CashflowApiModule } from './api/cashflow-api/cashflow-api.module';
       synchronize: true, // ⚠️ only for dev
     }),
     /* ORM Modules */
+    LoggingModule,
+
     UserModule,
     DoctorModule,
     ItemModule,
@@ -60,6 +64,10 @@ import { CashflowApiModule } from './api/cashflow-api/cashflow-api.module';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
     },
   ],
 })
