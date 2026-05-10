@@ -11,6 +11,8 @@ import {
 import { ReceiptApiService } from './receipt-api.service';
 import { CreateReceiptDto } from './receipt-api.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
 
 @Controller('receipt')
 export class ReceiptApiController {
@@ -25,6 +27,18 @@ export class ReceiptApiController {
   ) {
     return this.receiptService
       .list(startDate, endDate, type)
+      .catch((e) => ({ error: 'Unexpected Error' }));
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager')
+  @Get('deleted-receipts')
+  listDeletedReceipts(
+    @Query('startDate') startDate,
+    @Query('endDate') endDate,
+  ) {
+    return this.receiptService
+      .listDeletedReceipts(startDate, endDate)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 

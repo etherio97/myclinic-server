@@ -30,6 +30,21 @@ export class ReceiptApiService {
     });
   }
 
+  async listDeletedReceipts(startDate?: string, endDate?: string) {
+    const condition: any = {};
+    if (startDate && endDate) {
+      condition.date = Between(
+        moment(startDate).format('yyyy-MM-DDT00:00:00.000Z'),
+        moment(endDate).format('yyyy-MM-DDT23:59:59.999Z'),
+      );
+    }
+    return this.receiptRepo.find({
+      relations: ['patient', 'doctor', 'user'],
+      where: { status: 'Deleted', ...condition },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
   async findOne(id: string) {
     return this.receiptRepo.findOne({
       where: { id },
