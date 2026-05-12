@@ -26,8 +26,8 @@ export class DashboardController {
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @Roles('admin')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
   @Get('patient-count-by-date')
   getPatientCountByDate(
     @Query('startDate') startDate: string,
