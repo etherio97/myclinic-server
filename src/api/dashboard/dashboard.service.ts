@@ -124,4 +124,18 @@ export class DashboardService {
       )
       .then((res) => res[0]);
   }
+
+  async getPatientCountByDate(startDate: string, endDate: string) {
+    startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
+    endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
+
+    return this.repo.query(
+      `SELECT date::DATE AS visit_date, COUNT(DISTINCT patient_id) AS unique_patient_count
+        FROM receipts
+        WHERE date between $1 and $2
+        GROUP BY date::DATE
+        ORDER BY visit_date DESC`,
+      [startDate, endDate],
+    );
+  }
 }
