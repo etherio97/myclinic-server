@@ -138,4 +138,18 @@ export class DashboardService {
       [startDate, endDate],
     );
   }
+
+  async getTotalRevenueByDate(startDate: string, endDate: string) {
+    startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
+    endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
+
+    return this.repo.query(
+      `SELECT date::DATE AS visit_date, SUM(grand_total) AS total_revenue
+        FROM receipts
+        WHERE date between $1 and $2
+        GROUP BY date::DATE
+        ORDER BY visit_date DESC`,
+      [startDate, endDate],
+    );
+  }
 }

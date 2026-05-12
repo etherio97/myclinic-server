@@ -37,4 +37,16 @@ export class DashboardController {
       .getPatientCountByDate(startDate, endDate)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
+  @Get('revenue-by-date')
+  getTotalRevenueByDate(
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+  ) {
+    return this.dashboardService
+      .getTotalRevenueByDate(startDate, endDate)
+      .catch((e) => ({ error: 'Unexpected Error' }));
+  }
 }
