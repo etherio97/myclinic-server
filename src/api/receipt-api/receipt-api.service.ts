@@ -26,7 +26,7 @@ export class ReceiptApiService {
     return this.receiptRepo.find({
       relations: ['patient', 'doctor', 'user'],
       where: { status: 'Active', ...condition },
-      order: { createdAt: 'DESC' },
+      order: { date: 'DESC' },
     });
   }
 

@@ -28,25 +28,36 @@ export class DashboardController {
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin')
-  @Get('patient-count-by-date')
-  getPatientCountByDate(
+  @Get('monthly-statistics')
+  getMonthlyStatistics(
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
   ) {
-    return this.dashboardService
-      .getPatientCountByDate(startDate, endDate)
+    return Promise.all([
+      this.dashboardService.getPatientCountByDate(startDate, endDate),
+      this.dashboardService.getTotalRevenueByDate(startDate, endDate),
+    ])
+      .then(([patientCount, revenueTrend]) => ({
+        patientCount,
+        revenueTrend,
+      }))
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
-  @Get('revenue-by-date')
-  getTotalRevenueByDate(
+  @UseGuards(AuthGuard)
+  @Get('daily-statistics')
+  getDailyStatistics(
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
   ) {
-    return this.dashboardService
-      .getTotalRevenueByDate(startDate, endDate)
+    return Promise.all([
+      this.dashboardService.getPatientCountByHour(startDate, endDate),
+      this.dashboardService.getTotalRevenueByHour(startDate, endDate),
+    ])
+      .then(([patientCount, revenueTrend]) => ({
+        patientCount,
+        revenueTrend,
+      }))
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 }

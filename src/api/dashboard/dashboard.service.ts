@@ -130,11 +130,11 @@ export class DashboardService {
     endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
 
     return this.repo.query(
-      `SELECT date::DATE AS visit_date, COUNT(DISTINCT patient_id) AS unique_patient_count
+      `SELECT "date"::DATE AS "label", COUNT(DISTINCT patient_id) AS "value"
         FROM receipts
-        WHERE date between $1 and $2
-        GROUP BY date::DATE
-        ORDER BY visit_date DESC`,
+        WHERE "date" between $1 and $2
+        GROUP BY "date"::DATE
+        ORDER BY "label" DESC`,
       [startDate, endDate],
     );
   }
@@ -144,11 +144,39 @@ export class DashboardService {
     endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
 
     return this.repo.query(
-      `SELECT date::DATE AS visit_date, SUM(grand_total) AS total_revenue
+      `SELECT "date"::DATE AS "label", SUM(grand_total) AS "value"
         FROM receipts
-        WHERE date between $1 and $2
-        GROUP BY date::DATE
-        ORDER BY visit_date DESC`,
+        WHERE "date" between $1 and $2
+        GROUP BY "date"::DATE
+        ORDER BY "label" DESC`,
+      [startDate, endDate],
+    );
+  }
+
+  async getPatientCountByHour(startDate: string, endDate: string) {
+    startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
+    endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
+
+    return this.repo.query(
+      `SELECT date_trunc('hour', "date") AS "label", COUNT(DISTINCT patient_id) AS "value"
+        FROM receipts
+        WHERE "date" between $1 and $2
+        GROUP BY "label"
+        ORDER BY "label" ASC`,
+      [startDate, endDate],
+    );
+  }
+
+  async getTotalRevenueByHour(startDate: string, endDate: string) {
+    startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
+    endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
+
+    return this.repo.query(
+      `SELECT date_trunc('hour', "date") AS "label", SUM(grand_total) AS "value"
+        FROM receipts
+        WHERE "date" between $1 and $2
+        GROUP BY "label"
+        ORDER BY "label" ASC`,
       [startDate, endDate],
     );
   }
