@@ -27,15 +27,16 @@ export class DashboardController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('admin', 'lab-admin')
   @Get('monthly-statistics')
   getMonthlyStatistics(
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
+    @Query('type') type = 'clinic',
   ) {
     return Promise.all([
-      this.dashboardService.getPatientCountByDate(startDate, endDate),
-      this.dashboardService.getTotalRevenueByDate(startDate, endDate),
+      this.dashboardService.getPatientCountByDate(startDate, endDate, type),
+      this.dashboardService.getTotalRevenueByDate(startDate, endDate, type),
     ])
       .then(([patientCount, revenueTrend]) => ({
         patientCount,
@@ -49,10 +50,11 @@ export class DashboardController {
   getDailyStatistics(
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
+    @Query('type') type = 'clinic',
   ) {
     return Promise.all([
-      this.dashboardService.getPatientCountByHour(startDate, endDate),
-      this.dashboardService.getTotalRevenueByHour(startDate, endDate),
+      this.dashboardService.getPatientCountByHour(startDate, endDate, type),
+      this.dashboardService.getTotalRevenueByHour(startDate, endDate, type),
     ])
       .then(([patientCount, revenueTrend]) => ({
         patientCount,

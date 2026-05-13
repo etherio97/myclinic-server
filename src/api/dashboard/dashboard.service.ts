@@ -125,59 +125,111 @@ export class DashboardService {
       .then((res) => res[0]);
   }
 
-  async getPatientCountByDate(startDate: string, endDate: string) {
+  async getPatientCountByDate(
+    startDate: string,
+    endDate: string,
+    type: string,
+  ) {
+    let query = '';
+
     startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
     endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
 
-    return this.repo.query(
-      `SELECT "date"::DATE AS "label", COUNT(DISTINCT patient_id) AS "value"
+    if (type === 'laboratory') {
+      query = `SELECT "date"::DATE AS "label", COUNT(DISTINCT patient_id) AS "value"
+        FROM receipts
+        WHERE "date" between $1 and $2 and type = 'Laboratory'
+        GROUP BY "date"::DATE
+        ORDER BY "label" DESC`;
+    } else {
+      query = `SELECT "date"::DATE AS "label", COUNT(DISTINCT patient_id) AS "value"
         FROM receipts
         WHERE "date" between $1 and $2
         GROUP BY "date"::DATE
-        ORDER BY "label" DESC`,
-      [startDate, endDate],
-    );
+        ORDER BY "label" DESC`;
+    }
+
+    return this.repo.query(query, [startDate, endDate]);
   }
 
-  async getTotalRevenueByDate(startDate: string, endDate: string) {
+  async getTotalRevenueByDate(
+    startDate: string,
+    endDate: string,
+    type: string,
+  ) {
+    let query = '';
+
     startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
     endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
 
-    return this.repo.query(
-      `SELECT "date"::DATE AS "label", SUM(grand_total) AS "value"
+    if (type === 'laboratory') {
+      query = `SELECT "date"::DATE AS "label", SUM(grand_total) AS "value"
+        FROM receipts
+        WHERE "date" between $1 and $2 and type = 'Laboratory'
+        GROUP BY "date"::DATE
+        ORDER BY "label" DESC`;
+    } else {
+      query = `SELECT "date"::DATE AS "label", SUM(grand_total) AS "value"
         FROM receipts
         WHERE "date" between $1 and $2
         GROUP BY "date"::DATE
-        ORDER BY "label" DESC`,
-      [startDate, endDate],
-    );
+        ORDER BY "label" DESC`;
+    }
+
+    return this.repo.query(query, [startDate, endDate]);
   }
 
-  async getPatientCountByHour(startDate: string, endDate: string) {
+  async getPatientCountByHour(
+    startDate: string,
+    endDate: string,
+    type: string,
+  ) {
+    let query = '';
+
     startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
     endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
 
-    return this.repo.query(
-      `SELECT date_trunc('hour', "date") AS "label", COUNT(DISTINCT patient_id) AS "value"
+    if (type === 'laboratory') {
+      query = `SELECT date_trunc('hour', "date") AS "label", COUNT(DISTINCT patient_id) AS "value"
+        FROM receipts
+        WHERE "date" between $1 and $2 and type = 'Laboratory'
+        GROUP BY "label"
+        ORDER BY "label" ASC`;
+    } else {
+      query = `SELECT date_trunc('hour', "date") AS "label", COUNT(DISTINCT patient_id) AS "value"
         FROM receipts
         WHERE "date" between $1 and $2
         GROUP BY "label"
-        ORDER BY "label" ASC`,
-      [startDate, endDate],
-    );
+        ORDER BY "label" ASC`;
+    }
+
+    return this.repo.query(query, [startDate, endDate]);
   }
 
-  async getTotalRevenueByHour(startDate: string, endDate: string) {
+  async getTotalRevenueByHour(
+    startDate: string,
+    endDate: string,
+    type: string,
+  ) {
+    let query = '';
+
     startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
     endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
 
-    return this.repo.query(
-      `SELECT date_trunc('hour', "date") AS "label", SUM(grand_total) AS "value"
+    if (type === 'laboratory') {
+      query = `SELECT date_trunc('hour', "date") AS "label", SUM(grand_total) AS "value"
+        FROM receipts
+        WHERE "date" between $1 and $2 and type = 'Laboratory'
+        GROUP BY "label"
+        ORDER BY "label" ASC`;
+    } else {
+      query = `SELECT date_trunc('hour', "date") AS "label", SUM(grand_total) AS "value"
         FROM receipts
         WHERE "date" between $1 and $2
         GROUP BY "label"
-        ORDER BY "label" ASC`,
-      [startDate, endDate],
-    );
+        ORDER BY "label" ASC`;
+    }
+
+    return this.repo.query(query, [startDate, endDate]);
   }
 }

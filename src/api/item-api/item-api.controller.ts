@@ -54,7 +54,7 @@ export class ItemApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager')
+  @Roles('admin', 'manager', 'lab-admin')
   @Post('delete/:id')
   delete(@Param('id') id: string) {
     return this.itemService
