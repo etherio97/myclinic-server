@@ -138,13 +138,13 @@ export class DashboardService {
     if (type === 'laboratory') {
       query = `SELECT "date"::DATE AS "label", COUNT(DISTINCT patient_id) AS "value"
         FROM receipts
-        WHERE "date" between $1 and $2 and type = 'Laboratory'
+        WHERE "date" between $1 and $2 and type = 'Laboratory' and status = 'Active'
         GROUP BY "date"::DATE
         ORDER BY "label" DESC`;
     } else {
       query = `SELECT "date"::DATE AS "label", COUNT(DISTINCT patient_id) AS "value"
         FROM receipts
-        WHERE "date" between $1 and $2
+        WHERE "date" between $1 and $2 and status = 'Active'
         GROUP BY "date"::DATE
         ORDER BY "label" DESC`;
     }
@@ -165,13 +165,13 @@ export class DashboardService {
     if (type === 'laboratory') {
       query = `SELECT "date"::DATE AS "label", SUM(grand_total) AS "value"
         FROM receipts
-        WHERE "date" between $1 and $2 and type = 'Laboratory'
+        WHERE "date" between $1 and $2 and type = 'Laboratory' and status = 'Active'
         GROUP BY "date"::DATE
         ORDER BY "label" DESC`;
     } else {
       query = `SELECT "date"::DATE AS "label", SUM(grand_total) AS "value"
         FROM receipts
-        WHERE "date" between $1 and $2
+        WHERE "date" between $1 and $2 and status = 'Active'
         GROUP BY "date"::DATE
         ORDER BY "label" DESC`;
     }
@@ -192,13 +192,13 @@ export class DashboardService {
     if (type === 'laboratory') {
       query = `SELECT date_trunc('hour', "date") AS "label", COUNT(DISTINCT patient_id) AS "value"
         FROM receipts
-        WHERE "date" between $1 and $2 and type = 'Laboratory'
+        WHERE "date" between $1 and $2 and type = 'Laboratory' and status = 'Active'
         GROUP BY "label"
         ORDER BY "label" ASC`;
     } else {
       query = `SELECT date_trunc('hour', "date") AS "label", COUNT(DISTINCT patient_id) AS "value"
         FROM receipts
-        WHERE "date" between $1 and $2
+        WHERE "date" between $1 and $2 and status = 'Active'
         GROUP BY "label"
         ORDER BY "label" ASC`;
     }
@@ -219,13 +219,13 @@ export class DashboardService {
     if (type === 'laboratory') {
       query = `SELECT date_trunc('hour', "date") AS "label", SUM(grand_total) AS "value"
         FROM receipts
-        WHERE "date" between $1 and $2 and type = 'Laboratory'
+        WHERE "date" between $1 and $2 and type = 'Laboratory' and status = 'Active'
         GROUP BY "label"
         ORDER BY "label" ASC`;
     } else {
       query = `SELECT date_trunc('hour', "date") AS "label", SUM(grand_total) AS "value"
         FROM receipts
-        WHERE "date" between $1 and $2
+        WHERE "date" between $1 and $2 and status = 'Active'
         GROUP BY "label"
         ORDER BY "label" ASC`;
     }
