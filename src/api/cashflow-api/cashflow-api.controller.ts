@@ -32,7 +32,6 @@ export class CashflowApiController {
   }
 
   @Post('create')
-  @SkipThrottle()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin')
   create(@Body() dto: CreateCashflowDto, @Res() res) {

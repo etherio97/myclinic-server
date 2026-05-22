@@ -37,7 +37,7 @@ export class ItemApiController {
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard)
   @Post('create')
   create(@Body() dto: CreateItemDto) {
     return this.itemService
@@ -45,7 +45,7 @@ export class ItemApiController {
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard)
   @Post('update/:id')
   update(@Param('id') id: string, @Body() dto: UpdateItemDto) {
     return this.itemService

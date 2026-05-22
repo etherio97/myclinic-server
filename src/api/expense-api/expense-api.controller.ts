@@ -8,26 +8,26 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { DoctorApiService } from './doctor-api.service';
-import { CreateDoctorDto, UpdateDoctorDto } from './doctor-api.dto';
+import { ExpenseApiService } from './expense-api.service';
+import { CreateExpenseDto, UpdateExpenseDto } from './expense-api.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 
-@Controller('doctor')
-export class DoctorApiController {
-  constructor(private doctorService: DoctorApiService) {}
+@Controller('expense')
+export class ExpenseApiController {
+  constructor(private expenseService: ExpenseApiService) {}
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'manager', 'cashier')
   @Get('list')
   list(
-    @Query('fullName') fullName: string,
-    @Query('doctorNo') doctorNo: number,
-    @Query('listAll') listAll: string,
+    @Query('startDate') startDate,
+    @Query('endDate') endDate,
+    @Query('category') category,
   ) {
-    return this.doctorService
-      .list(fullName, doctorNo, listAll)
+    return this.expenseService
+      .list(startDate, endDate, category)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
@@ -35,7 +35,7 @@ export class DoctorApiController {
   @Roles('admin', 'manager', 'cashier')
   @Get('list/:id')
   findOne(@Param('id') id: string) {
-    return this.doctorService
+    return this.expenseService
       .findOne(id)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
@@ -43,27 +43,28 @@ export class DoctorApiController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'manager', 'cashier')
   @Post('create')
-  create(@Body() dto: CreateDoctorDto, @Res() res) {
-    return this.doctorService
+  create(@Body() dto: CreateExpenseDto, @Res() res) {
+    dto.user = res.req.user.sub;
+    return this.expenseService
       .create(dto)
       .then((data) => res.json(data))
-      .catch((e) => res.status(400).json({ error: 'Unexpected Error' }));
+      .catch((e) => res.status(500).json({ error: 'Unexpected Error' }));
   }
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'manager', 'cashier')
   @Post('update/:id')
-  update(@Param('id') id: string, @Body() dto: UpdateDoctorDto) {
-    return this.doctorService
+  update(@Param('id') id: string, @Body() dto: UpdateExpenseDto) {
+    return this.expenseService
       .update(id, dto)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager')
   @Post('delete/:id')
   delete(@Param('id') id: string) {
-    return this.doctorService
+    return this.expenseService
       .delete(id)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }

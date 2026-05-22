@@ -14,12 +14,15 @@ import {
   UpdateAppointmentDto,
 } from './appointment-api.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
 
 @Controller('appointment')
 export class AppointmentApiController {
   constructor(private appointmentService: AppointmentApiService) {}
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
   @Get('list')
   list(
     @Query('startDate') startDate,
@@ -31,7 +34,8 @@ export class AppointmentApiController {
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
   @Get('list/:id')
   findOne(@Param('id') id: string) {
     return this.appointmentService
@@ -39,19 +43,22 @@ export class AppointmentApiController {
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
   @Get('patient-appointments/:patientId')
   getPatientAppointments(@Param('patientId') patientId: string) {
     return this.appointmentService.findPatientAppointments(patientId);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
   @Get('doctor-appointments/:doctorId')
   getDoctorAppointments(@Param('doctorId') doctorId: string) {
     return this.appointmentService.findDoctorAppointments(doctorId);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
   @Post('create')
   create(@Body() dto: CreateAppointmentDto, @Res() res) {
     return this.appointmentService
@@ -60,7 +67,8 @@ export class AppointmentApiController {
       .catch((e) => res.status(400).json({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
   @Post('update/:id')
   update(@Param('id') id: string, @Body() dto: UpdateAppointmentDto) {
     return this.appointmentService
@@ -68,7 +76,8 @@ export class AppointmentApiController {
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
   @Post('delete/:id')
   delete(@Param('id') id: string) {
     return this.appointmentService

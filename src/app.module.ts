@@ -20,6 +20,8 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { CashflowModule } from './orm/cashflow/cashflow.module';
 import { CashflowApiModule } from './api/cashflow-api/cashflow-api.module';
 import { LoggingInterceptor } from './logging/logging.interceptor';
+import { ExpenseModule } from './orm/expense/expense.module';
+import { ExpenseApiModule } from './api/expense-api/expense-api.module';
 
 @Module({
   imports: [
@@ -46,6 +48,7 @@ import { LoggingInterceptor } from './logging/logging.interceptor';
     ReceiptModule,
     AppointmentModule,
     CashflowModule,
+    ExpenseModule,
 
     /* API Modules */
     AuthModule,
@@ -56,6 +59,7 @@ import { LoggingInterceptor } from './logging/logging.interceptor';
     ReceiptApiModule,
     AppointmentApiModule,
     CashflowApiModule,
+    ExpenseApiModule,
 
     /* Other Modules */
     SharedModule,

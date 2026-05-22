@@ -10,12 +10,15 @@ import {
 import { PatientApiService } from './patient-api.service';
 import { CreatePatientDto, UpdatePatientDto } from './patient-api.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
 
 @Controller('patient')
 export class PatientApiController {
   constructor(private patientService: PatientApiService) {}
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
   @Get('list')
   list(
     @Query('fullName') fullName: string,
@@ -26,7 +29,8 @@ export class PatientApiController {
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
   @Get('list/:id')
   findOne(@Param('id') id: string) {
     return this.patientService
@@ -34,7 +38,8 @@ export class PatientApiController {
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
   @Post('create')
   create(@Body() dto: CreatePatientDto) {
     return this.patientService
@@ -42,7 +47,8 @@ export class PatientApiController {
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
   @Post('update/:id')
   update(@Param('id') id: string, @Body() dto: UpdatePatientDto) {
     return this.patientService
@@ -50,7 +56,8 @@ export class PatientApiController {
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
   @Post('delete/:id')
   delete(@Param('id') id: string) {
     return this.patientService
