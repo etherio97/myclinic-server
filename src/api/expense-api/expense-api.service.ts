@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Repository } from 'typeorm';
+import { Between, Repository, In } from 'typeorm';
 import { CreateExpenseDto, UpdateExpenseDto } from './expense-api.dto';
 import moment from 'moment';
 import { Expense } from 'src/orm/expense/expense.entity';
@@ -12,7 +12,7 @@ export class ExpenseApiService {
     private expenseRepo: Repository<Expense>,
   ) {}
 
-  async list(startDate?: string, endDate?: string, category?: string) {
+  async list(startDate?: string, endDate?: string, category?: string[]) {
     const condition: any = {};
     if (startDate && endDate) {
       condition.date = Between(
@@ -20,8 +20,8 @@ export class ExpenseApiService {
         moment(endDate).format('yyyy-MM-DDT23:59:59.999Z'),
       );
     }
-    if (category) {
-      condition.category = category;
+    if (category && category.length) {
+      condition.category = In(category);
     }
     return this.expenseRepo.find({
       relations: ['user'],

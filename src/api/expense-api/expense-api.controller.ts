@@ -24,10 +24,15 @@ export class ExpenseApiController {
   list(
     @Query('startDate') startDate,
     @Query('endDate') endDate,
-    @Query('category') category,
+    @Query('category') category: string | string[],
   ) {
+    const categoryArray = Array.isArray(category)
+      ? category
+      : category
+        ? [category]
+        : [];
     return this.expenseService
-      .list(startDate, endDate, category)
+      .list(startDate, endDate, categoryArray)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
