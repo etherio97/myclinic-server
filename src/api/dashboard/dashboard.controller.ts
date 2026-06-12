@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, Res, UseGuards } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { RolesGuard } from 'src/guards/roles.guard';
@@ -11,19 +11,37 @@ export class DashboardController {
   @UseGuards(AuthGuard)
   @Get('batch-admin')
   getBatchAdmin(
+    @Res() res,
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
   ) {
-    return Promise.all([
-      this.dashboardService.getTotalRevenue(startDate, endDate),
-      this.dashboardService.getTotalDiscount(startDate, endDate),
-      this.dashboardService.getTotalClinicRevenue(startDate, endDate),
+    let promises = [
       this.dashboardService.getTotalLabRevenue(startDate, endDate),
-      this.dashboardService.getTotalPatients(startDate, endDate),
-      this.dashboardService.getTotalAppointments(startDate, endDate),
-    ])
-      .then(([a, b, c, d, e, f]) => ({ ...a, ...b, ...c, ...d, ...e, ...f }))
-      .catch((e) => ({ error: 'Unexpected Error' }));
+    ];
+    switch (res.req.user.role) {
+      case 'admin':
+      case 'manager':
+      case 'cashier':
+        promises.push(
+          this.dashboardService.getTotalRevenue(startDate, endDate),
+          this.dashboardService.getTotalClinicRevenue(startDate, endDate),
+          this.dashboardService.getTotalDiscount(startDate, endDate),
+          this.dashboardService.getTotalPatients(startDate, endDate),
+          this.dashboardService.getTotalExpenses(startDate, endDate),
+        );
+        break;
+    }
+    return Promise.all(promises)
+      .then((items) => {
+        let response = {};
+        items.forEach((item) => {
+          Object.keys(item).forEach((key) => {
+            response[key] = item[key];
+          });
+        });
+        res.json(response);
+      })
+      .catch((e) => res.json({ error: 'Unexpected Error' }));
   }
 
   @UseGuards(AuthGuard, RolesGuard)
