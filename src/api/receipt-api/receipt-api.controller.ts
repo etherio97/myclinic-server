@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ReceiptApiService } from './receipt-api.service';
-import { CreateReceiptDto } from './receipt-api.dto';
+import { CreateReceiptDto, UpdateReceiptDto } from './receipt-api.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
@@ -64,6 +64,15 @@ export class ReceiptApiController {
       .create(dto)
       .then((data) => res.json(data))
       .catch((e) => res.status(500).json({ error: 'Unexpected Error' }));
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
+  @Post('update/:id')
+  update(@Param('id') id: string, @Body() dto: UpdateReceiptDto) {
+    return this.receiptService
+      .update(id, dto)
+      .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
   @UseGuards(AuthGuard)
