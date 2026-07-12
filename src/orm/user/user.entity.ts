@@ -20,6 +20,9 @@ export class User {
   @Column({ type: 'varchar', length: 255, select: false })
   password: string;
 
+  @Column({ type: 'varchar', length: 2, default: 'en', select: false })
+  locale: string;
+
   @Column({
     type: 'enum',
     default: 'cashier',

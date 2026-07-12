@@ -30,12 +30,12 @@ export class LoggingInterceptor implements NestInterceptor {
         const latency = Date.now() - startTime;
         const statusCode = context.switchToHttp().getResponse().statusCode;
 
-        if (!SENSITIVE_ENDPOINTS.includes(url)) {
+        if (method === 'POST' && !SENSITIVE_ENDPOINTS.includes(url)) {
           await this.loggingService.log({
             userId: user?.id || null,
             method,
             endpoint: url,
-            body: method !== 'GET' ? body : null,
+            body,
             statusCode,
             latency,
           });

@@ -11,7 +11,7 @@ export class PatientApiService {
     private patientRepo: Repository<Patient>,
   ) {}
 
-  async list(fullName?: string, patientNo?: string) {
+  async list(fullName?: string, patientNo?: string, phoneNumber?: string) {
     const conditions: any = {};
 
     if (fullName) {
@@ -19,6 +19,16 @@ export class PatientApiService {
         .createQueryBuilder('patient')
         .where('LOWER(patient.fullName) LIKE LOWER(:fullName)', {
           fullName: `%${fullName}%`,
+        })
+        .orderBy({ created_at: 'DESC' })
+        .getMany();
+    }
+
+    if (phoneNumber) {
+      return this.patientRepo
+        .createQueryBuilder('patient')
+        .where('LOWER(patient.phoneNumber) LIKE LOWER(:phoneNumber)', {
+          phoneNumber: `%${phoneNumber}%`,
         })
         .orderBy({ created_at: 'DESC' })
         .getMany();

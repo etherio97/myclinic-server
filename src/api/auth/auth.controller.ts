@@ -130,4 +130,22 @@ export class AuthController {
       .changeRole(id, role)
       .catch((e) => ({ error: 'Unexcepted Error', message: e.message }));
   }
+
+  @UseGuards(AuthGuard)
+  @Post('set-locale')
+  setLocale(@Res() res, @Body('lang') lang: string) {
+    return this.authService
+      .setLocale(res.req.user.sub, lang)
+      .then(() => res.json({ message: 'Successfully changed!' }))
+      .catch((e) => res.json({ error: true, message: e.message }));
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('get-locale')
+  getLocale(@Res() res) {
+    return this.authService
+      .getLocale(res.req.user.sub)
+      .then((r) => res.json(r))
+      .catch((e) => res.json({ error: true, message: e.message }));
+  }
 }

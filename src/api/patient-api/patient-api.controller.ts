@@ -23,9 +23,10 @@ export class PatientApiController {
   list(
     @Query('fullName') fullName: string,
     @Query('patientNo') patientNo: string,
+    @Query('phoneNumber') phoneNumber: string,
   ) {
     return this.patientService
-      .list(fullName, patientNo)
+      .list(fullName, patientNo, phoneNumber)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 

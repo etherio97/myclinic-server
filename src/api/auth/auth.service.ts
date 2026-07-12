@@ -162,4 +162,15 @@ export class AuthService {
 
     return this.userRepo.update(id, { password: hashedPassword });
   }
+
+  setLocale(id: string, lang: string) {
+    return this.userRepo.update(id, { locale: lang });
+  }
+
+  getLocale(id: string) {
+    return this.userRepo.findOne({
+      where: { id },
+      select: ['locale'],
+    });
+  }
 }
