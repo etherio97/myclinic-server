@@ -34,7 +34,7 @@ import { ExpenseApiModule } from './api/expense-api/expense-api.module';
       port: <any>process.env.DB_PORT || 5432,
       username: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASS || '',
-      database: process.env.DB_NAME || 'postgres',
+      database: process.env.DB_NAME || 'myclinic',
       autoLoadEntities: true,
       synchronize: true, // ⚠️ only for dev
     }),
