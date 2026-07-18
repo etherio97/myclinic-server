@@ -18,7 +18,8 @@ import { Roles } from 'src/decorators/roles.decorator';
 export class ReceiptApiController {
   constructor(private receiptService: ReceiptApiService) {}
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier', 'lab-admin')
   @Get('list')
   list(
     @Query('startDate') startDate,
@@ -42,7 +43,8 @@ export class ReceiptApiController {
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier', 'lab-admin')
   @Get('list/:id')
   findOne(@Param('id') id: string) {
     return this.receiptService
@@ -50,13 +52,15 @@ export class ReceiptApiController {
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier', 'lab-admin')
   @Get('patient-receipts/:patientId')
   getPatientAppointments(@Param('patientId') patientId: string) {
     return this.receiptService.findPatientReceipt(patientId);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
   @Post('create')
   create(@Body() dto: CreateReceiptDto, @Res() res) {
     dto.user = res.req.user.sub;
@@ -75,7 +79,8 @@ export class ReceiptApiController {
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager')
   @Post('delete/:id')
   delete(@Param('id') id: string) {
     return this.receiptService

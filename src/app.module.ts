@@ -22,6 +22,12 @@ import { CashflowApiModule } from './api/cashflow-api/cashflow-api.module';
 import { LoggingInterceptor } from './logging/logging.interceptor';
 import { ExpenseModule } from './orm/expense/expense.module';
 import { ExpenseApiModule } from './api/expense-api/expense-api.module';
+import { LabTestItemModule } from './orm/lab-test-item/lab-test-item.module';
+import { LabTestItemApiModule } from './api/lab-test-item-api/lab-test-item-api.module';
+import { LabOrderModule } from './orm/lab-order/lab-order.entity.module';
+import { LabResultModule } from './orm/lab-result/lab-result.entity.module';
+import { LabOrderApiModule } from './api/lab-order-api/lab-order-api.module';
+import { LabResultApiModule } from './api/lab-result-api/lab-result-api.module';
 
 @Module({
   imports: [
@@ -49,6 +55,9 @@ import { ExpenseApiModule } from './api/expense-api/expense-api.module';
     AppointmentModule,
     CashflowModule,
     ExpenseModule,
+    LabTestItemModule,
+    LabOrderModule,
+    LabResultModule,
 
     /* API Modules */
     AuthModule,
@@ -60,6 +69,9 @@ import { ExpenseApiModule } from './api/expense-api/expense-api.module';
     AppointmentApiModule,
     CashflowApiModule,
     ExpenseApiModule,
+    LabTestItemApiModule,
+    LabOrderApiModule,
+    LabResultApiModule,
 
     /* Other Modules */
     SharedModule,

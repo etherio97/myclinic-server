@@ -19,7 +19,7 @@ export class DoctorApiController {
   constructor(private doctorService: DoctorApiService) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager', 'cashier', 'lab-admin', 'lab-cashier')
   @Get('list')
   list(
     @Query('fullName') fullName: string,

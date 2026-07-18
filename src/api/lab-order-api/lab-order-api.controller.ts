@@ -5,33 +5,34 @@ import {
   Param,
   Post,
   Query,
+  Res,
   UseGuards,
 } from '@nestjs/common';
-import { ItemApiService } from './item-api.service';
-import { CreateItemDto, UpdateItemDto } from './item-api.dto';
+import { LabOrderApiService } from './lab-order-api.service';
+import { CreateLabOrderDto, UpdateLabOrderDto } from './lab-order-api.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 
-@Controller('item')
-export class ItemApiController {
-  constructor(private itemService: ItemApiService) {}
+@Controller('lab-orders')
+export class LabOrderApiController {
+  constructor(private itemService: LabOrderApiService) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin')
+  @Roles('admin', 'manager', 'lab-admin', 'lab-cashier')
   @Get('list')
   list(
-    @Query('name') name: string,
-    @Query('itemType') itemType: string,
-    @Query('category') category: string,
+    @Query('startDate') startDate,
+    @Query('endDate') endDate,
+    @Query('status') status,
   ) {
     return this.itemService
-      .list({ name, itemType, category })
+      .list(startDate, endDate, status)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin')
+  @Roles('admin', 'manager', 'lab-admin', 'lab-cashier')
   @Get('list/:id')
   findOne(@Param('id') id: string) {
     return this.itemService
@@ -40,18 +41,20 @@ export class ItemApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin')
+  @Roles('admin', 'manager', 'lab-admin', 'lab-cashier')
   @Post('create')
-  create(@Body() dto: CreateItemDto) {
+  create(@Body() dto: CreateLabOrderDto, @Res() res) {
+    dto.user = res.req.user.sub;
     return this.itemService
       .create(dto)
-      .catch((e) => ({ error: 'Unexpected Error' }));
+      .then((data) => res.json(data))
+      .catch((e) => res.status(500).json({ error: 'Unexpected Error' }));
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin')
+  @Roles('admin', 'manager', 'lab-admin', 'lab-cashier')
   @Post('update/:id')
-  update(@Param('id') id: string, @Body() dto: UpdateItemDto) {
+  update(@Param('id') id: string, @Body() dto: UpdateLabOrderDto) {
     return this.itemService
       .update(id, dto)
       .catch((e) => ({ error: 'Unexpected Error' }));
@@ -63,16 +66,6 @@ export class ItemApiController {
   delete(@Param('id') id: string) {
     return this.itemService
       .delete(id)
-      .catch((e) => ({ error: 'Unexpected Error' }));
-  }
-
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin')
-  @Get('categories')
-  utils(@Query('type') type: string) {
-    return this.itemService
-      .getCategories(type)
-      .then((items) => items.map(({ category }) => category))
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 }
