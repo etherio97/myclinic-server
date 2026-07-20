@@ -6,6 +6,7 @@ import { User } from 'src/orm/user/user.entity';
 export class CreateLabResultDto {
   user: User;
   order: LabOrder;
+  labPatientNo: string | null;
   status: string;
   reportedDate: Date;
   items: LabTestItem[];
@@ -14,6 +15,7 @@ export class CreateLabResultDto {
 export class UpdateLabResultDto {
   user?: User;
   order?: LabOrder;
+  labPatientNo?: string | null;
   status?: string;
   reportedDate?: Date;
   items?: LabTestItem[];

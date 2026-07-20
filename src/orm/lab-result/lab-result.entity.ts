@@ -36,6 +36,14 @@ export class LabResult {
   order: LabOrder;
 
   @Column({
+    name: 'lab_patient_no',
+    type: 'varchar',
+    length: 16,
+    nullable: true,
+  })
+  labPatientNo: string;
+
+  @Column({
     type: 'varchar',
     length: 32,
     default: 'Active',
