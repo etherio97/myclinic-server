@@ -11,6 +11,7 @@ import { LoggingService } from './logging.service'; // Your service to save to D
 const SENSITIVE_ENDPOINTS = [
   '/auth/login',
   '/auth/register',
+  '/auth/refresh',
   '/auth/new-password',
   '/auth/change-password',
   '/auth/reset-password',

@@ -25,6 +25,13 @@ export class AuthController {
       .catch((e) => ({ error: 'Unexcepted Error', message: e.message }));
   }
 
+  @Post('refresh')
+  refresh(@Body('refresh_token') refreshToken: string) {
+    return this.authService
+      .refresh(refreshToken)
+      .catch((e) => ({ error: 'Unauthorized', message: e.message }));
+  }
+
   @Post('new-password')
   newPassword(
     @Body('username') username: string,

@@ -107,15 +107,57 @@ export class AuthService {
       lastLoggedIn: moment().toISOString(),
     });
 
-    const token = this.jwtService.sign({
+    return this.generateTokens(user);
+  }
+
+  async refresh(refreshToken: string) {
+    try {
+      const decoded = await this.jwtService.verifyAsync(refreshToken);
+
+      const user = await this.userRepo.findOne({
+        where: { id: decoded.sub, isActive: true },
+        select: ['id', 'fullName', 'username', 'role'],
+      });
+
+      if (!user)
+        throw new UnauthorizedException('User no longer exists or is inactive');
+
+      return this.generateTokens(user, true);
+    } catch (e) {
+      throw new UnauthorizedException('Invalid or expired refresh token');
+    }
+  }
+
+  private async generateTokens(user: any, accessTokenOnly = false) {
+    const accessTokenLive = '15m';
+    const refershTokenLive = '1d';
+    const payload = {
       id: user.id,
       sub: user.id,
       fullname: user.fullName,
       username: user.username,
       role: user.role,
-    });
+    };
 
-    return { access_token: token };
+    if (accessTokenOnly) {
+      const accessToken = await this.jwtService.signAsync(payload, {
+        expiresIn: accessTokenLive,
+      });
+      return { access_token: accessToken };
+    }
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(payload, { expiresIn: accessTokenLive }),
+      this.jwtService.signAsync(
+        { sub: user.id },
+        { expiresIn: refershTokenLive },
+      ),
+    ]);
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    };
   }
 
   async getAll(role?: string) {
