@@ -72,9 +72,13 @@ export class LabResultApiController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'manager', 'lab-admin')
   @Post('delete/:id')
-  delete(@Param('id') id: string) {
-    return this.labResultService
-      .delete(id)
-      .catch((e) => ({ error: 'Unexpected Error' }));
+  async delete(@Param('id') id: string) {
+    try {
+      const { order } = await this.labResultService.findOne(id);
+      await this.labOrderService.delete(order.id);
+      return await this.labResultService.delete(id);
+    } catch (e) {
+      return { error: 'Unexpected Error' };
+    }
   }
 }
