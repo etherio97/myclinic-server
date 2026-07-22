@@ -27,7 +27,7 @@ export class LabOrderApiService {
     }
 
     return this.labOrderRepo.find({
-      relations: ['patient', 'doctor', 'user'],
+      relations: ['patient', 'user'],
       where: { ...condition },
       order: { collectedDate: 'DESC' },
     });
@@ -36,7 +36,7 @@ export class LabOrderApiService {
   findOne(id: string) {
     return this.labOrderRepo.findOne({
       where: { id },
-      relations: ['patient', 'doctor', 'user'],
+      relations: ['patient', 'user'],
     });
   }
 

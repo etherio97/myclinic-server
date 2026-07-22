@@ -9,7 +9,6 @@ import {
   Index,
 } from 'typeorm';
 import { Patient } from '../patient/patient.entity';
-import { Doctor } from '../doctor/doctor.entity';
 import { LabTestItem } from '../lab-test-item/lab-test-item.entity';
 import { User } from '../user/user.entity';
 
@@ -34,9 +33,15 @@ export class LabOrder {
   @JoinColumn({ name: 'patient_id' })
   patient: Patient;
 
-  @ManyToOne(() => Doctor, { nullable: true })
-  @JoinColumn({ name: 'doctor_id' })
-  doctor: Doctor;
+  // @ManyToOne(() => Doctor, { nullable: true })
+  // @JoinColumn({ name: 'doctor_id' })
+  // doctor: Doctor;
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
+  referDoctor: string;
 
   @Column({
     type: 'varchar',
