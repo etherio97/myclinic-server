@@ -28,6 +28,12 @@ import { LabOrderModule } from './orm/lab-order/lab-order.entity.module';
 import { LabResultModule } from './orm/lab-result/lab-result.entity.module';
 import { LabOrderApiModule } from './api/lab-order-api/lab-order-api.module';
 import { LabResultApiModule } from './api/lab-result-api/lab-result-api.module';
+import { PharmItemModule } from './orm/pharm-item/pharm-item.module';
+import { PharmItemApiModule } from './api/pharm-item-api/pharm-item-api.module';
+import { PharmPurchaseModule } from './orm/pharm-purchase/pharm-purchase.module';
+import { PharmPurchaseApiModule } from './api/pharm-purchase-api/pharm-purchase-api.module';
+import { PharmReceiptModule } from './orm/pharm-receipt/pharm-receipt.module';
+import { PharmReceiptApiModule } from './api/pharm-receipt-api/pharm-receipt-api.module';
 
 @Module({
   imports: [
@@ -58,6 +64,9 @@ import { LabResultApiModule } from './api/lab-result-api/lab-result-api.module';
     LabTestItemModule,
     LabOrderModule,
     LabResultModule,
+    PharmItemModule,
+    PharmPurchaseModule,
+    PharmReceiptModule,
 
     /* API Modules */
     AuthModule,
@@ -72,6 +81,9 @@ import { LabResultApiModule } from './api/lab-result-api/lab-result-api.module';
     LabTestItemApiModule,
     LabOrderApiModule,
     LabResultApiModule,
+    PharmItemApiModule,
+    PharmPurchaseApiModule,
+    PharmReceiptApiModule,
 
     /* Other Modules */
     SharedModule,
