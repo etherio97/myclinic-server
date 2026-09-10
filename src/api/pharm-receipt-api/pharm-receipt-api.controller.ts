@@ -17,12 +17,16 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { PharmItemApiService } from '../pharm-item-api/pharm-item-api.service';
+import { PharmReceiptItemService } from './pharm-receipt-item.service';
+import { PharmReceipt } from 'src/orm/pharm-receipt/pharm-receipt.entity';
+import { sleep } from 'src/shared/utils';
 
 @Controller('pharm-receipt')
 export class PharmReceiptApiController {
   constructor(
     private receiptService: PharmReceiptApiService,
     private itemService: PharmItemApiService,
+    private receiptItemService: PharmReceiptItemService,
   ) {}
 
   @UseGuards(AuthGuard, RolesGuard)
@@ -69,19 +73,26 @@ export class PharmReceiptApiController {
     try {
       dto.user = res.req.user.sub;
 
+      let receipt = await this.receiptService.create(dto);
+
       for (let item of dto.items) {
         // Update stocks
         let quantity = (<any>item).quantity;
         let unit = (<any>item).unit;
         if (unit !== item.trackingUnit) {
+          unit = item.trackingUnit;
           quantity = quantity * item.qtyPerUnit;
         }
-
-        await this.itemService.decrement(item.code, 'stocks', quantity);
+        await this.receiptItemService.create({
+          receipt: receipt.id,
+          unit,
+          quantity,
+          item: item.code,
+        });
       }
 
-      // Save purchase
-      return res.json(await this.receiptService.create(dto));
+      // Response
+      return res.json(receipt);
     } catch (e) {
       console.error(e);
       return res.status(500).json({ error: 'Unexpected Error' });
@@ -102,23 +113,23 @@ export class PharmReceiptApiController {
   @Post('delete/:id')
   async delete(@Param('id') id: string) {
     try {
-      // Fetch Item
-      let data = await this.receiptService.findOne(id);
+      // // Fetch Item
+      // let data = await this.receiptService.findOne(id);
 
-      for (let item of data.items) {
-        let quantity = (<any>item).quantity;
-        let unit = (<any>item).unit;
-        console.log(item.name);
-        if (unit !== item.trackingUnit) {
-          quantity = quantity * item.qtyPerUnit;
-        }
+      // for (let item of data.items) {
+      //   let quantity = (<any>item).quantity;
+      //   let unit = (<any>item).unit;
+      //   if (unit !== item.trackingUnit) {
+      //     quantity = quantity * item.qtyPerUnit;
+      //   }
 
-        // Update stocks
-        await this.itemService.increment(item.code, 'stocks', quantity);
-      }
+      //   // Update stocks
+      //   await this.itemService.increment(item.code, 'stocks', quantity);
+      // }
+      await this.receiptItemService.delete(id);
 
       // Save purchase
-      return this.receiptService.delete(id);
+      return await this.receiptService.delete(id);
     } catch (e) {
       console.error(e);
       return { error: 'Unexpected Error' };

@@ -61,7 +61,7 @@ export class PharmReceiptApiService {
     });
   }
 
-  async create(dto: CreatePharmReceiptDto) {
+  create(dto: CreatePharmReceiptDto) {
     const receipt = this.receiptRepo.create(dto);
 
     return this.receiptRepo.save(receipt);

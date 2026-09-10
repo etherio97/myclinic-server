@@ -1,0 +1,25 @@
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { PharmInventoryApiService } from './pharm-inventory-api.service';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+
+@Controller('pharm-inventory')
+export class PharmInventoryApiController {
+  constructor(private inventoryService: PharmInventoryApiService) {}
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'cashier')
+  @Get('list')
+  list() {
+    return this.inventoryService.getAll();
+  }
+}

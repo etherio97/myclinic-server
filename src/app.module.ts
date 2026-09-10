@@ -34,6 +34,8 @@ import { PharmPurchaseModule } from './orm/pharm-purchase/pharm-purchase.module'
 import { PharmPurchaseApiModule } from './api/pharm-purchase-api/pharm-purchase-api.module';
 import { PharmReceiptModule } from './orm/pharm-receipt/pharm-receipt.module';
 import { PharmReceiptApiModule } from './api/pharm-receipt-api/pharm-receipt-api.module';
+import { PharmReceiptItemModule } from './orm/pharm-receipt-item/pharm-receipt-item.module';
+import { PharmInventoryApiModule } from './api/pharm-inventory-api/pharm-inventory-api.module';
 
 @Module({
   imports: [
@@ -67,6 +69,7 @@ import { PharmReceiptApiModule } from './api/pharm-receipt-api/pharm-receipt-api
     PharmItemModule,
     PharmPurchaseModule,
     PharmReceiptModule,
+    PharmReceiptItemModule,
 
     /* API Modules */
     AuthModule,
@@ -84,6 +87,7 @@ import { PharmReceiptApiModule } from './api/pharm-receipt-api/pharm-receipt-api
     PharmItemApiModule,
     PharmPurchaseApiModule,
     PharmReceiptApiModule,
+    PharmInventoryApiModule,
 
     /* Other Modules */
     SharedModule,
