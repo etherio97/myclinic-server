@@ -20,7 +20,7 @@ export class PharmItemApiController {
   constructor(private itemService: PharmItemApiService) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager', 'cashier', 'pharm-cashier')
   @Get('list')
   list(
     @Query('name') name: string,
@@ -33,7 +33,7 @@ export class PharmItemApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager', 'cashier', 'pharm-cashier')
   @Get('list/:id')
   findOne(@Param('id') id: string) {
     return this.itemService

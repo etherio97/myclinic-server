@@ -30,7 +30,7 @@ export class PharmReceiptApiController {
   ) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager', 'cashier', 'pharm-cashier')
   @Get('list')
   list(@Query('startDate') startDate, @Query('endDate') endDate) {
     return this.receiptService
@@ -51,7 +51,7 @@ export class PharmReceiptApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager', 'cashier', 'pharm-cashier')
   @Get('list/:id')
   findOne(@Param('id') id: string) {
     return this.receiptService
@@ -60,14 +60,14 @@ export class PharmReceiptApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager', 'cashier', 'pharm-cashier')
   @Get('patient-receipts/:patientId')
   getPatientAppointments(@Param('patientId') patientId: string) {
     return this.receiptService.findPatientReceipt(patientId);
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager', 'cashier', 'pharm-cashier')
   @Post('create')
   async create(@Body() dto: CreatePharmReceiptDto, @Res() res) {
     try {
@@ -100,7 +100,7 @@ export class PharmReceiptApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager', 'cashier', 'pharm-cashier')
   @Post('update/:id')
   update(@Param('id') id: string, @Body() dto: UpdatePharmReceiptDto) {
     return this.receiptService

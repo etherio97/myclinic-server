@@ -22,6 +22,7 @@ export class DashboardController {
       case 'admin':
       case 'manager':
       case 'cashier':
+      case 'pharm-cashier':
         promises.push(
           this.dashboardService.getTotalRevenue(startDate, endDate),
           this.dashboardService.getTotalClinicRevenue(startDate, endDate),

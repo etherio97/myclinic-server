@@ -17,7 +17,7 @@ export class PharmInventoryApiController {
   constructor(private inventoryService: PharmInventoryApiService) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager', 'cashier', 'pharm-cashier')
   @Get('list')
   list() {
     return this.inventoryService.getAll();

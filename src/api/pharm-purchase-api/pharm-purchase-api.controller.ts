@@ -27,7 +27,7 @@ export class PharmPurchaseApiController {
   ) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager')
   @Get('list')
   list(@Query('startDate') startDate, @Query('endDate') endDate) {
     return this.purchaseService
@@ -36,7 +36,7 @@ export class PharmPurchaseApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager')
   @Get('list/:id')
   findOne(@Param('id') id: string) {
     return this.purchaseService

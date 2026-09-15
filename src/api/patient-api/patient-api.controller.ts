@@ -18,7 +18,14 @@ export class PatientApiController {
   constructor(private patientService: PatientApiService) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin', 'lab-cashier')
+  @Roles(
+    'admin',
+    'manager',
+    'cashier',
+    'lab-admin',
+    'lab-cashier',
+    'pharm-cashier',
+  )
   @Get('list')
   list(
     @Query('fullName') fullName: string,
