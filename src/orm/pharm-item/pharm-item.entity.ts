@@ -83,6 +83,13 @@ export class PharmItem {
   })
   stocks: number;
 
+  @Column({
+    type: 'enum',
+    enum: ['Active', 'Inactive'],
+    default: 'Active',
+  })
+  status: string;
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',

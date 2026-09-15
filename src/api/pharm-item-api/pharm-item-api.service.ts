@@ -11,15 +11,18 @@ export class PharmItemApiService {
     private pharmItemRepo: Repository<PharmItem>,
   ) {}
 
-  list({
-    name,
-    code,
-    barcode,
-  }: {
-    name?: string;
-    code?: string;
-    barcode?: string;
-  }) {
+  list(
+    {
+      name,
+      code,
+      barcode,
+    }: {
+      name?: string;
+      code?: string;
+      barcode?: string;
+    },
+    showAll = true,
+  ) {
     const qb = this.pharmItemRepo.createQueryBuilder('pharm_item');
 
     if (name) {
@@ -34,6 +37,9 @@ export class PharmItemApiService {
     }
     if (barcode) {
       qb.andWhere('pharm_item.barcode = :barcode', { barcode });
+    }
+    if (!showAll) {
+      qb.andWhere('pharm_item.status = :status', { status: 'Active' });
     }
 
     qb.orderBy('pharm_item.name', 'ASC');

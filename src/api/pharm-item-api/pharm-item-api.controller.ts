@@ -26,9 +26,10 @@ export class PharmItemApiController {
     @Query('name') name: string,
     @Query('code') code: string,
     @Query('barcode') barcode: string,
+    @Query('showAll') showAll: string,
   ) {
     return this.itemService
-      .list({ name, code, barcode })
+      .list({ name, code, barcode }, showAll ? true : false)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
