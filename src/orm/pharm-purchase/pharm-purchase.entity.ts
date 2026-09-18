@@ -70,6 +70,13 @@ export class PharmPurchase {
   })
   total: number;
 
+  @Column({
+    type: 'enum',
+    enum: ['Active', 'Archive'],
+    default: 'Active',
+  })
+  status: string;
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',

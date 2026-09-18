@@ -29,9 +29,15 @@ export class PharmPurchaseApiController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'manager')
   @Get('list')
-  list(@Query('startDate') startDate, @Query('endDate') endDate) {
+  list(
+    @Query('startDate') startDate,
+    @Query('endDate') endDate,
+    @Query('status') status,
+    @Query('sortBy') sortBy,
+    @Query('itemCode') itemCode,
+  ) {
     return this.purchaseService
-      .list(startDate, endDate)
+      .list(startDate, endDate, status, sortBy, itemCode)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
@@ -54,8 +60,8 @@ export class PharmPurchaseApiController {
       let item = await this.itemService.findOne(itemCode);
       if (!item) return { error: 'Item not found' };
       let { trackingUnit, stocks } = item;
-      // if (dto.unit !== trackingUnit)
-      //   return { error: 'Tracking unit mismatched' };
+      if (dto.unit !== trackingUnit)
+        return { error: `Tracking unit mismatched. Expected: ${trackingUnit}` };
       dto.unit = trackingUnit;
       await this.itemService.increment(itemCode, 'stocks', dto.quantity);
 
@@ -67,14 +73,14 @@ export class PharmPurchaseApiController {
     }
   }
 
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @Roles('admin', 'manager')
-  // @Post('update/:id')
-  // update(@Param('id') id: string, @Body() dto: UpdatePharmPurchaseDto) {
-  //   return this.purchaseService
-  //     .update(id, dto)
-  //     .catch((e) => ({ error: 'Unexpected Error' }));
-  // }
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager')
+  @Post('update/:id')
+  update(@Param('id') id: string, @Body() dto: UpdatePharmPurchaseDto) {
+    return this.purchaseService
+      .update(id, dto)
+      .catch((e) => ({ error: 'Unexpected Error' }));
+  }
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'manager')

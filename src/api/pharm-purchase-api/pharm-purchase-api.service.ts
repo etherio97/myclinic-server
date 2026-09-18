@@ -15,21 +15,44 @@ export class PharmPurchaseApiService {
     private pharmPurchaseRepo: Repository<PharmPurchase>,
   ) {}
 
-  list(startDate?: string, endDate?: string) {
-    const condition: any = {};
+  list(
+    startDate?: string,
+    endDate?: string,
+    status?: string,
+    sortBy?: string,
+    itemCode?: string,
+  ) {
+    const condition: any = {},
+      order: any = {};
     if (startDate && endDate) {
       condition.purchasedDate = Between(
         moment(startDate).format('yyyy-MM-DDT00:00:00.000Z'),
         moment(endDate).format('yyyy-MM-DDT23:59:59.999Z'),
       );
     }
+    if (status) {
+      condition.status = status;
+    }
+    if (itemCode) {
+      condition.item = { code: itemCode };
+    }
+    console.log(sortBy);
+    switch (sortBy) {
+      case 'exp:asc':
+        order.expiryDate = 'ASC';
+        break;
+      case 'date:desc':
+        order.purchasedDate = 'DESC';
+        order.item = { name: 'DESC' };
+        break;
+      case 'name:asc':
+        order.item = { name: 'ASC' };
+        break;
+    }
     return this.pharmPurchaseRepo.find({
       relations: ['item'],
       where: { ...condition },
-      order: {
-        purchasedDate: 'DESC',
-        item: { name: 'DESC' },
-      },
+      order,
     });
   }
 
