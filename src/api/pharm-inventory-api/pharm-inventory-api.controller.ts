@@ -19,7 +19,7 @@ export class PharmInventoryApiController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'manager', 'cashier', 'pharm-cashier')
   @Get('list')
-  list() {
-    return this.inventoryService.getAll();
+  list(@Query('showAll') showAll: string) {
+    return this.inventoryService.getAll(showAll === '1' ? true : false);
   }
 }
