@@ -16,8 +16,8 @@ export class PharmReceiptItemService {
     return this.receiptItemRepo.save(receipt);
   }
 
-  update(id: string, dto: any) {
-    return this.receiptItemRepo.update(id, dto);
+  update(criteria: any, dto: any) {
+    return this.receiptItemRepo.update(criteria, dto);
   }
 
   delete(receiptId: string) {

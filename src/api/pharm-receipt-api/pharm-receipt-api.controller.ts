@@ -102,10 +102,30 @@ export class PharmReceiptApiController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'manager', 'cashier', 'pharm-cashier')
   @Post('update/:id')
-  update(@Param('id') id: string, @Body() dto: UpdatePharmReceiptDto) {
-    return this.receiptService
-      .update(id, dto)
-      .catch((e) => ({ error: 'Unexpected Error' }));
+  async update(@Param('id') id: string, @Body() dto: UpdatePharmReceiptDto) {
+    try {
+      await this.receiptService.update(id, dto);
+      await this.receiptItemService.delete(id);
+
+      for (let item of dto.items) {
+        // Update stocks
+        let quantity = (<any>item).quantity;
+        let unit = (<any>item).unit;
+        if (unit !== item.trackingUnit) {
+          unit = item.trackingUnit;
+          quantity = quantity * item.qtyPerUnit;
+        }
+        await this.receiptItemService.create({
+          receipt: id,
+          unit,
+          quantity,
+          item: item.code,
+        });
+      }
+    } catch (e) {
+      console.error(e);
+      return { error: 'Unexpected Error' };
+    }
   }
 
   @UseGuards(AuthGuard, RolesGuard)
@@ -113,19 +133,6 @@ export class PharmReceiptApiController {
   @Post('delete/:id')
   async delete(@Param('id') id: string) {
     try {
-      // // Fetch Item
-      // let data = await this.receiptService.findOne(id);
-
-      // for (let item of data.items) {
-      //   let quantity = (<any>item).quantity;
-      //   let unit = (<any>item).unit;
-      //   if (unit !== item.trackingUnit) {
-      //     quantity = quantity * item.qtyPerUnit;
-      //   }
-
-      //   // Update stocks
-      //   await this.itemService.increment(item.code, 'stocks', quantity);
-      // }
       await this.receiptItemService.delete(id);
 
       // Save purchase
