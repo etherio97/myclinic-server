@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Repository } from 'typeorm';
+import { Between, ILike, Repository } from 'typeorm';
 import {
   CreatePharmPurchaseDto,
   UpdatePharmPurchaseDto,
@@ -21,6 +21,7 @@ export class PharmPurchaseApiService {
     status?: string,
     sortBy?: string,
     itemCode?: string,
+    itemName?: string,
   ) {
     const condition: any = {},
       order: any = {};
@@ -36,7 +37,9 @@ export class PharmPurchaseApiService {
     if (itemCode) {
       condition.item = { code: itemCode };
     }
-    console.log(sortBy);
+    if (itemName) {
+      condition.item = { name: ILike(`${itemName}%`) };
+    }
     switch (sortBy) {
       case 'exp:asc':
         order.expiryDate = 'ASC';

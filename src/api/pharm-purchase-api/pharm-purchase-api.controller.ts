@@ -35,9 +35,10 @@ export class PharmPurchaseApiController {
     @Query('status') status,
     @Query('sortBy') sortBy,
     @Query('itemCode') itemCode,
+    @Query('itemName') itemName: string,
   ) {
     return this.purchaseService
-      .list(startDate, endDate, status, sortBy, itemCode)
+      .list(startDate, endDate, status, sortBy, itemCode, itemName)
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
 
