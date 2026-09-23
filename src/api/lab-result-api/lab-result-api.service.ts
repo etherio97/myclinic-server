@@ -33,6 +33,19 @@ export class LabResultApiService {
     });
   }
 
+  findPatientResult(patientId: string) {
+    return this.labResultRepo.find({
+      where: {
+        order: {
+          patient: { id: patientId },
+        },
+        status: 'Active',
+      },
+      order: { createdAt: 'DESC' },
+      relations: ['order', 'order.patient', 'user'],
+    });
+  }
+
   findOne(id: string) {
     return this.labResultRepo.findOne({
       where: { id },

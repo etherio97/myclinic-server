@@ -37,6 +37,13 @@ export class LabResultApiController {
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'manager', 'lab-admin', 'lab-cashier')
+  @Get('patient-results/:patientId')
+  getPatientAppointments(@Param('patientId') patientId: string) {
+    return this.labResultService.findPatientResult(patientId);
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager', 'lab-admin', 'lab-cashier')
   @Get('list/:id')
   findOne(@Param('id') id: string) {
     return this.labResultService
