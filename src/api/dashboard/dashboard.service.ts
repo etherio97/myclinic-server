@@ -294,7 +294,7 @@ export class DashboardService {
     let query = `SELECT date_trunc('hour', "date") AS "label", SUM(grand_total) AS "value"
         FROM pharm_receipts
         WHERE "date" between $1 and $2 and status = 'Active'
-        GROUP BY "date"::DATE
+        GROUP BY "label"
         ORDER BY "label" DESC`;
 
     return this.repo.query(query, [startDate, endDate]);

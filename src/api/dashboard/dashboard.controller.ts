@@ -88,12 +88,11 @@ export class DashboardController {
       this.dashboardService.getPatientCountByHour(startDate, endDate, type),
       this.dashboardService.getTotalRevenueByHour(startDate, endDate, type),
       this.dashboardService.getTotalPharmacyRevenueByHour(startDate, endDate),
-    ])
-      .then(([patientCount, revenueTrend, pharmRevenueTrend]) => ({
-        patientCount,
-        revenueTrend,
-        pharmRevenueTrend,
-      }))
-      .catch((e) => ({ error: 'Unexpected Error' }));
+    ]).then(([patientCount, revenueTrend, pharmRevenueTrend]) => ({
+      patientCount,
+      revenueTrend,
+      pharmRevenueTrend,
+    }));
+    // .catch((e) => ({ error: 'Unexpected Error' }));
   }
 }
