@@ -10,6 +10,35 @@ export class DashboardService {
     @InjectRepository(Receipt)
     private repo: Repository<Receipt>,
   ) {}
+
+  async getPharmTotalRevenue(startDate: string, endDate: string) {
+    startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
+    endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
+
+    return this.repo
+      .query(
+        `SELECT COALESCE(SUM(grand_total), 0) AS total_pharm_revenue 
+        FROM pharm_receipts WHERE date BETWEEN $1 AND $2 
+        AND status = 'Active'`,
+        [startDate, endDate],
+      )
+      .then((res) => res[0]);
+  }
+
+  async getPharmTotalDiscount(startDate: string, endDate: string) {
+    startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
+    endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
+
+    return this.repo
+      .query(
+        `SELECT COALESCE(SUM(discount_amount), 0) AS total_pharm_discount 
+        FROM pharm_receipts WHERE date BETWEEN $1 AND $2 
+        AND status = 'Active'`,
+        [startDate, endDate],
+      )
+      .then((res) => res[0]);
+  }
+
   async getTotalExpenses(startDate: string, endDate: string) {
     startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
     endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
@@ -187,6 +216,19 @@ export class DashboardService {
         GROUP BY "date"::DATE
         ORDER BY "label" DESC`;
     }
+
+    return this.repo.query(query, [startDate, endDate]);
+  }
+
+  async getTotalPharmacyRevenueByDate(startDate: string, endDate: string) {
+    startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
+    endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
+
+    let query = `SELECT "date"::DATE AS "label", SUM(grand_total) AS "value"
+        FROM pharm_receipts
+        WHERE "date" between $1 and $2 and status = 'Active'
+        GROUP BY "date"::DATE
+        ORDER BY "label" DESC`;
 
     return this.repo.query(query, [startDate, endDate]);
   }

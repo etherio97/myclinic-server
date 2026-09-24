@@ -52,9 +52,16 @@ export class ReceiptApiService {
     });
   }
 
-  async findPatientReceipt(patientId: any) {
+  async findPatientReceipt(patientId: string, type: string) {
+    let conditions: any = {
+      patient: { id: patientId },
+      status: 'Active',
+    };
+    if (type) {
+      conditions.type = type;
+    }
     return this.receiptRepo.find({
-      where: { patient: { id: patientId }, status: 'Active' },
+      where: conditions,
       order: { createdAt: 'DESC' },
       relations: ['patient', 'doctor', 'user'],
     });

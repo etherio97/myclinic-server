@@ -19,7 +19,7 @@ export class ReceiptApiController {
   constructor(private receiptService: ReceiptApiService) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin')
+  @Roles('admin', 'manager', 'cashier', 'lab-admin', 'lab-cashier')
   @Get('list')
   list(
     @Query('startDate') startDate,
@@ -32,7 +32,7 @@ export class ReceiptApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager')
+  @Roles('admin', 'manager', 'lab-admin')
   @Get('deleted-receipts')
   listDeletedReceipts(
     @Query('startDate') startDate,
@@ -44,7 +44,7 @@ export class ReceiptApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin')
+  @Roles('admin', 'manager', 'cashier', 'lab-admin', 'lab-cashier')
   @Get('list/:id')
   findOne(@Param('id') id: string) {
     return this.receiptService
@@ -53,14 +53,17 @@ export class ReceiptApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin')
+  @Roles('admin', 'manager', 'cashier', 'lab-admin', 'lab-cashier')
   @Get('patient-receipts/:patientId')
-  getPatientAppointments(@Param('patientId') patientId: string) {
-    return this.receiptService.findPatientReceipt(patientId);
+  getPatientReceipt(
+    @Param('patientId') patientId: string,
+    @Query('type') type: string,
+  ) {
+    return this.receiptService.findPatientReceipt(patientId, type);
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager', 'cashier', 'lab-admin', 'lab-cashier')
   @Post('create')
   create(@Body() dto: CreateReceiptDto, @Res() res) {
     dto.user = res.req.user.sub;
@@ -71,7 +74,7 @@ export class ReceiptApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles('admin', 'manager', 'cashier', 'lab-admin', 'lab-cashier')
   @Post('update/:id')
   update(@Param('id') id: string, @Body() dto: UpdateReceiptDto) {
     return this.receiptService
@@ -80,7 +83,7 @@ export class ReceiptApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager')
+  @Roles('admin', 'manager', 'lab-admin')
   @Post('delete/:id')
   delete(@Param('id') id: string) {
     return this.receiptService

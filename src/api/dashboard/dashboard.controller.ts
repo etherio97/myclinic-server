@@ -15,20 +15,31 @@ export class DashboardController {
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
   ) {
-    let promises = [
-      this.dashboardService.getTotalLabRevenue(startDate, endDate),
-    ];
+    let promises = [];
     switch (res.req.user.role) {
       case 'admin':
       case 'manager':
       case 'cashier':
-      case 'pharm-cashier':
         promises.push(
+          this.dashboardService.getTotalLabRevenue(startDate, endDate),
           this.dashboardService.getTotalRevenue(startDate, endDate),
           this.dashboardService.getTotalClinicRevenue(startDate, endDate),
           this.dashboardService.getTotalDiscount(startDate, endDate),
           this.dashboardService.getTotalPatients(startDate, endDate),
           this.dashboardService.getTotalExpenses(startDate, endDate),
+          this.dashboardService.getPharmTotalDiscount(startDate, endDate),
+          this.dashboardService.getPharmTotalRevenue(startDate, endDate),
+        );
+        break;
+      case 'pharm-cashier':
+        promises.push(
+          this.dashboardService.getPharmTotalDiscount(startDate, endDate),
+          this.dashboardService.getPharmTotalRevenue(startDate, endDate),
+        );
+        break;
+      case 'lab-admin':
+        promises.push(
+          this.dashboardService.getTotalLabRevenue(startDate, endDate),
         );
         break;
     }
@@ -46,7 +57,7 @@ export class DashboardController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'lab-admin')
+  @Roles('admin', 'manager', 'lab-admin')
   @Get('monthly-statistics')
   getMonthlyStatistics(
     @Query('startDate') startDate: string,
@@ -56,10 +67,12 @@ export class DashboardController {
     return Promise.all([
       this.dashboardService.getPatientCountByDate(startDate, endDate, type),
       this.dashboardService.getTotalRevenueByDate(startDate, endDate, type),
+      this.dashboardService.getTotalPharmacyRevenueByDate(startDate, endDate),
     ])
-      .then(([patientCount, revenueTrend]) => ({
+      .then(([patientCount, revenueTrend, pharmRevenueTrend]) => ({
         patientCount,
         revenueTrend,
+        pharmRevenueTrend,
       }))
       .catch((e) => ({ error: 'Unexpected Error' }));
   }
@@ -74,10 +87,12 @@ export class DashboardController {
     return Promise.all([
       this.dashboardService.getPatientCountByHour(startDate, endDate, type),
       this.dashboardService.getTotalRevenueByHour(startDate, endDate, type),
+      this.dashboardService.getTotalPharmacyRevenueByDate(startDate, endDate),
     ])
-      .then(([patientCount, revenueTrend]) => ({
+      .then(([patientCount, revenueTrend, pharmRevenueTrend]) => ({
         patientCount,
         revenueTrend,
+        pharmRevenueTrend,
       }))
       .catch((e) => ({ error: 'Unexpected Error' }));
   }

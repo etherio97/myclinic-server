@@ -38,7 +38,14 @@ export class PatientApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier')
+  @Roles(
+    'admin',
+    'manager',
+    'cashier',
+    'lab-admin',
+    'lab-cashier',
+    'pharm-cashier',
+  )
   @Get('list/:id')
   findOne(@Param('id') id: string) {
     return this.patientService

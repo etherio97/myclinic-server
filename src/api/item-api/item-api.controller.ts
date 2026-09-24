@@ -18,7 +18,7 @@ export class ItemApiController {
   constructor(private itemService: ItemApiService) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin')
+  @Roles('admin', 'manager', 'cashier', 'lab-admin', 'lab-cashier')
   @Get('list')
   list(
     @Query('name') name: string,
@@ -31,7 +31,7 @@ export class ItemApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin')
+  @Roles('admin', 'manager', 'cashier', 'lab-admin', 'lab-cashier')
   @Get('list/:id')
   findOne(@Param('id') id: string) {
     return this.itemService
@@ -40,7 +40,7 @@ export class ItemApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin')
+  @Roles('admin', 'manager', 'cashier', 'lab-admin', 'lab-cashier')
   @Post('create')
   create(@Body() dto: CreateItemDto) {
     return this.itemService
@@ -49,7 +49,7 @@ export class ItemApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin')
+  @Roles('admin', 'manager', 'cashier', 'lab-admin', 'lab-cashier')
   @Post('update/:id')
   update(@Param('id') id: string, @Body() dto: UpdateItemDto) {
     return this.itemService
@@ -67,7 +67,7 @@ export class ItemApiController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'manager', 'cashier', 'lab-admin')
+  @Roles('admin', 'manager', 'cashier', 'lab-admin', 'lab-cashier')
   @Get('categories')
   utils(@Query('type') type: string) {
     return this.itemService
