@@ -92,7 +92,7 @@ export class DashboardController {
       patientCount,
       revenueTrend,
       pharmRevenueTrend,
-    }));
-    // .catch((e) => ({ error: 'Unexpected Error' }));
+    }))
+    .catch((e) => ({ error: 'Unexpected Error' }));
   }
 }

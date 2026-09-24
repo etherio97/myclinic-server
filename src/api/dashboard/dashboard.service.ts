@@ -295,7 +295,7 @@ export class DashboardService {
         FROM pharm_receipts
         WHERE "date" between $1 and $2 and status = 'Active'
         GROUP BY "label"
-        ORDER BY "label" DESC`;
+        ORDER BY "label" ASC`;
 
     return this.repo.query(query, [startDate, endDate]);
   }
