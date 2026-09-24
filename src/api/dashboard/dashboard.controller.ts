@@ -87,7 +87,7 @@ export class DashboardController {
     return Promise.all([
       this.dashboardService.getPatientCountByHour(startDate, endDate, type),
       this.dashboardService.getTotalRevenueByHour(startDate, endDate, type),
-      this.dashboardService.getTotalPharmacyRevenueByDate(startDate, endDate),
+      this.dashboardService.getTotalPharmacyRevenueByHour(startDate, endDate),
     ])
       .then(([patientCount, revenueTrend, pharmRevenueTrend]) => ({
         patientCount,

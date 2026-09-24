@@ -286,4 +286,17 @@ export class DashboardService {
 
     return this.repo.query(query, [startDate, endDate]);
   }
+
+  async getTotalPharmacyRevenueByHour(startDate: string, endDate: string) {
+    startDate = moment(startDate).format('yyyy-MM-DDT00:00:00.000Z');
+    endDate = moment(endDate).format('yyyy-MM-DDT23:59:59.999Z');
+
+    let query = `SELECT date_trunc('hour', "date") AS "label", SUM(grand_total) AS "value"
+        FROM pharm_receipts
+        WHERE "date" between $1 and $2 and status = 'Active'
+        GROUP BY "date"::DATE
+        ORDER BY "label" DESC`;
+
+    return this.repo.query(query, [startDate, endDate]);
+  }
 }
