@@ -34,6 +34,30 @@ export class PharmReceiptItem {
   })
   quantity: number;
 
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  discount: number;
+
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  price: number;
+
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  total: number;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  date: string;
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',

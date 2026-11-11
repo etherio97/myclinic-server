@@ -79,6 +79,9 @@ export class PharmReceiptApiController {
         // Update stocks
         let quantity = (<any>item).quantity;
         let unit = (<any>item).unit;
+        let discount = parseInt((<any>item).discount || '0');
+        let price = parseFloat((<any>item).sellingPrice || '0');
+        let total = price * quantity - discount;
         if (unit !== item.trackingUnit) {
           unit = item.trackingUnit;
           quantity = quantity * item.qtyPerUnit;
@@ -88,6 +91,10 @@ export class PharmReceiptApiController {
           unit,
           quantity,
           item: item.code,
+          discount,
+          price,
+          total,
+          date: receipt.date,
         });
       }
 
@@ -111,6 +118,9 @@ export class PharmReceiptApiController {
         // Update stocks
         let quantity = (<any>item).quantity;
         let unit = (<any>item).unit;
+        let discount = parseInt((<any>item).discount || '0');
+        let price = parseFloat((<any>item).sellingPrice || '0');
+        let total = price * quantity - discount;
         if (unit !== item.trackingUnit) {
           unit = item.trackingUnit;
           quantity = quantity * item.qtyPerUnit;
@@ -120,6 +130,10 @@ export class PharmReceiptApiController {
           unit,
           quantity,
           item: item.code,
+          discount,
+          price,
+          total,
+          date: dto.date,
         });
       }
     } catch (e) {
